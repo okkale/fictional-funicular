@@ -43,34 +43,35 @@ export default function Portal() {
   const rotate = useTransform(scrollYProgress, [0, 1], [reduce ? 0 : -60, reduce ? 0 : 120]);
   const scale = useTransform(scrollYProgress, [0, 0.45], [reduce ? 1 : 0.8, 1]);
   return (
-    <section id="build" ref={ref} className="relative overflow-hidden px-4 py-28 md:px-8">
+    <section id="build" ref={ref} className="relative overflow-hidden px-4 py-16 md:px-8 md:py-28">
       <div className="mx-auto max-w-[1400px]">
         <div className="relative lg:min-h-[min(760px,calc(100dvh-150px))]">
-          <div className="relative mx-auto aspect-square w-[min(88vw,620px)] lg:absolute lg:left-1/2 lg:top-1/2 lg:w-[min(620px,calc(100dvh-210px))] lg:-translate-x-1/2 lg:-translate-y-1/2">
+          <div className="relative mx-auto aspect-square w-[min(84vw,620px)] lg:absolute lg:left-1/2 lg:top-1/2 lg:w-[min(620px,calc(100dvh-210px))] lg:-translate-x-1/2 lg:-translate-y-1/2">
             <motion.div style={{ rotate, scale }} className="h-full w-full will-change-transform">
               <Ring />
             </motion.div>
             <div className="absolute inset-0 grid place-items-center p-[22%] text-center">
               <Reveal>
                 <Eyebrow className="justify-center">WHAT I BUILD</Eyebrow>
-                <h2 className="display mt-3 text-5xl md:text-7xl">
+                <h2 className="display mt-3 text-[2.6rem] md:text-7xl">
                   Models <span className="text-muted">that ship</span>
                 </h2>
-                <p className="mx-auto mt-4 max-w-[30ch] text-sm leading-relaxed text-muted md:text-base">
+                <p className="mx-auto mt-3 max-w-[26ch] text-[13px] leading-relaxed text-muted md:mt-4 md:max-w-[30ch] md:text-base">
                   Research-grade deep learning, carried all the way into software people use.
                 </p>
               </Reveal>
             </div>
           </div>
-          <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:mt-0 lg:block">
+          {/* Phones: a compact 2 x 2 grid; desktop: cards float around the ring */}
+          <ul className="mt-8 grid grid-cols-2 gap-3 md:mt-10 md:gap-4 lg:mt-0 lg:block">
             {CARDS.map(({ Icon, title, body, pos }, i) => (
               <li key={title} className={`lg:absolute lg:w-[300px] ${pos}`}>
-                <Reveal delay={0.1 + i * 0.08}>
-                  <Tilt>
-                  <div className="glass rounded-[18px] p-6 shadow-[0_20px_60px_-20px_rgba(2,82,172,0.5)] transition-transform duration-500 ease-out-expo hover:-translate-y-1">
-                    <Icon size={26} className={i % 2 ? "text-accent-fg" : "text-blue-glow"} />
-                    <h3 className="display mt-4 text-3xl">{title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted">{body}</p>
+                <Reveal delay={0.1 + i * 0.08} className="h-full">
+                  <Tilt className="h-full">
+                  <div className="glass h-full rounded-[16px] p-4 shadow-[0_20px_60px_-20px_rgba(2,82,172,0.5)] transition-transform duration-500 ease-out-expo hover:-translate-y-1 md:rounded-[18px] md:p-6">
+                    <Icon size={22} className={`md:h-[26px] md:w-[26px] ${i % 2 ? "text-accent-fg" : "text-blue-glow"}`} />
+                    <h3 className="display mt-3 text-[1.35rem] leading-[0.95] md:mt-4 md:text-3xl">{title}</h3>
+                    <p className="mt-2 text-[12.5px] leading-snug text-muted md:text-sm md:leading-relaxed">{body}</p>
                   </div>
                   </Tilt>
                 </Reveal>

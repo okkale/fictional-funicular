@@ -35,7 +35,7 @@ export default function Hero() {
         <motion.img
           src="/me-portrait.jpg"
           srcSet="/me-portrait.webp"
-          alt=""
+          alt="Omkar Kale"
           className="hero-portrait -ml-[15%] -mt-[9%] h-auto w-[130%] max-w-none origin-top md:m-0 md:h-full md:w-full md:max-w-full md:object-cover md:object-top"
           initial={reduce ? false : { opacity: 0, scale: 1.06 }}
           whileInView={{ opacity: 1, scale: 1 }}

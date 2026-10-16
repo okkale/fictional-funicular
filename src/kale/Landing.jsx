@@ -139,9 +139,11 @@ export default function Landing() {
               Omkar Kale<span className="text-accent">.</span>
             </motion.h1>
             <motion.p {...enter(0.2)} className="on-glow mt-3 max-w-[52ch] text-base leading-relaxed text-fg md:text-lg [@media(max-height:560px)]:hidden">
-              Final-year AI engineering student in Pune. I publish explainable deep learning research and ship AI agents inside real software.
+              {/* Phones: one short line; the rest of the story is a scroll away. */}
+              <span className="md:hidden">AI engineering student. Explainable deep learning research, AI agents in real software.</span>
+              <span className="hidden md:inline">Final-year AI engineering student in Pune. I publish explainable deep learning research and ship AI agents inside real software.</span>
             </motion.p>
-            <motion.ul {...enter(0.26)} className="mt-5 grid max-w-[560px] grid-cols-3 gap-px overflow-hidden rounded-[14px] border border-white/15 bg-white/10 [@media(max-height:640px)]:hidden" aria-label="Highlights">
+            <motion.ul {...enter(0.26)} className="mt-5 hidden max-w-[560px] grid-cols-3 gap-px overflow-hidden rounded-[14px] border border-white/15 bg-white/10 md:grid [@media(max-height:640px)]:hidden" aria-label="Highlights">
               {FACTS.map(([value, label]) => (
                 <li key={label} className="bg-chrome/85 px-3 py-2.5 backdrop-blur-md md:px-4">
                   <p className="display text-2xl text-fg md:text-3xl">{value}</p>
@@ -155,7 +157,7 @@ export default function Landing() {
                 <button
                   key={id}
                   onClick={() => startTour(id)}
-                  className={`group flex h-12 items-center gap-2 rounded-full px-5 text-[15px] font-medium transition active:scale-[0.97] ${
+                  className={`group flex h-11 items-center gap-2 rounded-full px-4 text-sm font-medium transition active:scale-[0.97] md:h-12 md:px-5 md:text-[15px] ${
                     i === 0
                       ? "bg-fg text-ink hover:bg-white"
                       : "border border-white/15 bg-white/[0.04] text-fg backdrop-blur-md hover:border-white/30 hover:bg-white/[0.08]"
@@ -175,7 +177,7 @@ export default function Landing() {
               e.preventDefault();
               submit(q);
             }}
-            className="w-full rounded-[20px] border border-white/15 bg-chrome/70 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl md:p-5 [@media(max-height:640px)]:hidden"
+            className="hidden w-full rounded-[20px] border border-white/15 bg-chrome/70 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl md:block md:p-5 [@media(max-height:640px)]:hidden"
           >
             <label htmlFor="landing-ask" className="text-sm font-medium text-fg/90">
               Ask {NAME} anything
