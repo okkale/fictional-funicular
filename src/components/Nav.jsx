@@ -26,7 +26,7 @@ export function Monogram({ className = "" }) {
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
-  const [hidden, setHidden] = useState(true); // revealed once the visitor leaves the K.A.L.E. landing
+  const [hidden, setHidden] = useState(true); // revealed once the visitor leaves the Kyle landing
   const [scrolled, setScrolled] = useState(false);
   const { scrollY, scrollYProgress } = useScroll();
   const { tour } = useKale(); // tours own the screen: keep the nav out of the way

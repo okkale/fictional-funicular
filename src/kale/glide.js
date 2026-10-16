@@ -1,4 +1,4 @@
-// One scroll animator for the whole site (landing snap, tours, K.A.L.E. answers, proof chips).
+// One scroll animator for the whole site (landing snap, tours, Kyle answers, proof chips).
 // Runs on the wall clock, not on frame deltas, so a slow frame skips ahead instead of stuttering,
 // and it always lands exactly on its target. One glide at a time: a new one replaces the old.
 

@@ -1,4 +1,4 @@
-// K.A.L.E.'s small language model, run in the browser. A character-level GPT (about 0.8M
+// Kyle's small language model, run in the browser. A character-level GPT (about 0.8M
 // parameters) trained on Omkar's portfolio by slm/train.py, shipped as float16 weights in
 // public/kale/. Plain JavaScript forward pass with a KV cache: no runtime, no server.
 //

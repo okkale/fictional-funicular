@@ -10,7 +10,7 @@ const NAMES = { recruiter: "Recruiter tour", engineer: "Engineer tour", explore:
 
 /*
   Guided tour caption: one slim glass bar at the bottom of the screen. Title of the current stop,
-  K.A.L.E.'s line as a caption, and playback controls. Rises from the bottom and leaves the same way.
+  Kyle's line as a caption, and playback controls. Rises from the bottom and leaves the same way.
 */
 export default function TourBar() {
   const { tour, speaking } = useKale();

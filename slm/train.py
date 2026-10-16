@@ -1,4 +1,4 @@
-"""Train K.A.L.E.'s small language model: a character-level, decoder-only transformer (GPT-style).
+"""Train Kyle's small language model: a character-level, decoder-only transformer (GPT-style).
 
 Each training row is one sequence:  BOS question SEP answer ACT action EOS
 Loss is taken on the answer and action only, so the model learns to respond, not to ask.

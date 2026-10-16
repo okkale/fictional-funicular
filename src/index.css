@@ -2,12 +2,12 @@
 
 /* Brand tokens. One cinematic dark theme, after the Sharkfold palette:
    near-black stage, navy and electric blue light, signal red, wine shadow.
-   K.A.L.E. (the guide) is warm gold, the only warm hue; everything else is blue / red light. */
+   Kyle (the guide) is warm gold, the only warm hue; everything else is blue / red light. */
 :root {
   --bg: #030306;
   --surface: #0a0d18;
   --surface-2: #121a2e;
-  /* Fixed chrome (nav, K.A.L.E. dock, chat, tour bar): one near-black navy, used at 70–90%. */
+  /* Fixed chrome (nav, Kyle dock, chat, tour bar): one near-black navy, used at 70–90%. */
   --chrome: #050812;
   --line: rgba(137, 148, 180, 0.22);
   --text: #f6f6f6;
@@ -56,7 +56,7 @@ html {
   scroll-padding-top: 88px;
 }
 /* Page 2 sits exactly one screen down, flush with the top: cancel the nav offset so anchor jumps
-   and K.A.L.E.'s scrolls land on the same seam the landing snap uses. */
+   and Kyle's scrolls land on the same seam the landing snap uses. */
 #hero {
   scroll-margin-top: -88px;
 }
@@ -70,7 +70,7 @@ body {
   transition: background-color 0.4s var(--ease-out-expo), color 0.4s var(--ease-out-expo);
 }
 
-/* Keyboard focus: K.A.L.E. gold ring, offset so it reads on white, gold and dark fills alike.
+/* Keyboard focus: Kyle gold ring, offset so it reads on white, gold and dark fills alike.
    In the base layer so a component can still override it with a utility. */
 @layer base {
   :focus-visible {
@@ -84,7 +84,7 @@ body {
   color: var(--ink);
 }
 
-/* Copy that sits over the K.A.L.E. sphere: a dark halo keeps it legible over the bright filaments. */
+/* Copy that sits over the Kyle sphere: a dark halo keeps it legible over the bright filaments. */
 .on-glow {
   text-shadow: 0 1px 2px rgba(3, 3, 6, 0.9), 0 0 18px rgba(3, 3, 6, 0.85);
 }
@@ -188,7 +188,7 @@ body {
     border: 1px solid var(--line);
   }
 
-  /* K.A.L.E. HUD panel: glass with gold hairline corners. */
+  /* Kyle HUD panel: glass with gold hairline corners. */
   .hud-panel {
     position: relative;
     background: linear-gradient(180deg, rgba(255, 182, 72, 0.06), rgba(255, 182, 72, 0.015));
@@ -236,7 +236,7 @@ body {
   pointer-events: none;
   z-index: 2;
 
-  /* First layer: K.A.L.E.'s gold afterglow at the seam where the sphere dissolves, so the warm
+  /* First layer: Kyle's gold afterglow at the seam where the sphere dissolves, so the warm
      landing hands off into the blue / red room instead of cutting to it. */
   background:
     radial-gradient(

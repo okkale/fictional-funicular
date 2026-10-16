@@ -1,4 +1,4 @@
-// Runs K.A.L.E.'s model off the main thread, so decoding never stalls scrolling or the HUD.
+// Runs Kyle's model off the main thread, so decoding never stalls scrolling or the HUD.
 import { createModel } from "./slm";
 
 let model = null;

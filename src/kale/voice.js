@@ -1,4 +1,4 @@
-// K.A.L.E.'s voice. Fixed lines play pre-recorded neural audio (public/kale/voice, made by
+// Kyle's voice. Fixed lines play pre-recorded neural audio (public/kale/voice, made by
 // slm/record_voice.py); anything else uses the browser's Web Speech voice. Everything degrades to
 // a silent no-op where the browser lacks support (Firefox has no SpeechRecognition).
 import { speakable } from "./speakable";

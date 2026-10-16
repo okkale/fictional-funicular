@@ -1,9 +1,9 @@
-// K.A.L.E. (Knowledge Assistant for Learning & Engineering): Omkar's on-page guide.
+// Kyle (Knowledge Assistant for Learning & Engineering): Omkar's on-page guide.
 // Pure intent rules over the portfolio data. No DOM here: each answer returns text plus an
 // optional action, and the UI (Kale.jsx) performs it. Runs fully in the browser.
 import { profile, xaiPaper } from "../data";
 
-export const NAME = "K.A.L.E.";
+export const NAME = "Kyle";
 
 // Every section a tour or an action may scroll to.
 export const SECTIONS = ["#top", "#hero", "#metrics", "#build", "#expertise", "#projects", "#lab", "#systems", "#experience", "#stack", "#contact"];
@@ -199,7 +199,7 @@ export const TOURS = {
 
 export const SUGGEST = ["Show research", "Pneumonia paper", "Open the ERP", "Skills", "Download résumé", "How to hire him"];
 
-// Every fixed line K.A.L.E. can say from this file, for recording the neural voice.
+// Every fixed line Kyle can say from this file, for recording the neural voice.
 export function spokenLines() {
   return [...INTENTS.map((it) => it.run("").text), FALLBACK, ...Object.values(TOURS).flat().map((s) => s.line)];
 }

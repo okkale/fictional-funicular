@@ -9,7 +9,7 @@ import TourBar from "./TourBar";
 import { listen, supported } from "./voice";
 import { EASE } from "../components/ui";
 
-/* Corner dock: K.A.L.E. shrinks here once the visitor leaves the landing HUD. Ctrl/⌘ K toggles. */
+/* Corner dock: Kyle shrinks here once the visitor leaves the landing HUD. Ctrl/⌘ K toggles. */
 export default function Kale() {
   const { open, log, voiceOn, speaking, listening, tour, slm, thinking } = useKale();
   const [shown, setShown] = useState(false);
@@ -90,7 +90,7 @@ export default function Kale() {
     <>
       <AnimatePresence>{tour && <TourBar key="tour" />}</AnimatePresence>
 
-      {/* Subtitles: what K.A.L.E. is saying while the chat is closed. */}
+      {/* Subtitles: what Kyle is saying while the chat is closed. */}
       <AnimatePresence mode="wait">
         {subtitle && (
           <motion.p
@@ -157,7 +157,7 @@ export default function Kale() {
                 />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="hud-text font-mono text-sm tracking-[0.2em]" title="Knowledge Assistant for Learning & Engineering">{NAME}</p>
+                <p className="hud-text font-mono text-sm tracking-[0.2em]">{NAME}</p>
                 <p className="truncate font-mono text-[11px] text-muted" aria-live="polite">{status}</p>
               </div>
               <div className="flex items-center gap-1">

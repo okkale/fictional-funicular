@@ -1,4 +1,4 @@
-// K.A.L.E. holographic HUD, drawn on canvas 2D. Each layer is a pure function:
+// Kyle holographic HUD, drawn on canvas 2D. Each layer is a pure function:
 //   (ctx, t, R, p, s) → draws centered at (0, 0)
 // t: seconds, R: outer radius in px, p: boot progress for this layer (0..1, draws the layer on),
 // s: { level 0..1 voice amplitude, tint "idle" | "listening" | "speaking" }.

@@ -7,7 +7,7 @@ import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { level } from "./voice";
 
 /*
-  K.A.L.E.'s body: a warm gold holographic sphere of light filaments. Original construction, built
+  Kyle's body: a warm gold holographic sphere of light filaments. Original construction, built
   procedurally from a fixed seed:
     · filament shells: partial great-circle arcs on three nested shells, each shell on its own spin
     · circuit traces: Manhattan-style paths walked across the surface, with solder pads

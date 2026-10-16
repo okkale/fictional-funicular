@@ -14,7 +14,7 @@ import { Monogram } from "../components/Nav";
 const Sphere = lazy(() => import("./Sphere"));
 
 /*
-  Page 1: K.A.L.E. The holographic sphere fills the screen; the UI is three things only:
+  Page 1: Kyle The holographic sphere fills the screen; the UI is three things only:
   who this is, three ways in, and a box to ask a question. One scroll glides to page 2 while the
   camera flies into the sphere (useSnapToHero + the section's scroll progress).
 */
@@ -111,7 +111,7 @@ export default function Landing() {
             {supported.tts && (
               <button
                 onClick={() => setVoice(!kale.get().voiceOn)}
-                aria-label={voiceOn ? "Mute K.A.L.E. voice" : "Turn on K.A.L.E. voice"}
+                aria-label={voiceOn ? `Mute ${NAME} voice` : `Turn on ${NAME} voice`}
                 aria-pressed={voiceOn}
                 className="grid h-10 w-10 place-items-center rounded-full border border-white/15 bg-white/[0.04] text-fg/80 backdrop-blur-md transition hover:border-white/25 hover:text-fg active:scale-95"
               >

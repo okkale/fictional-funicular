@@ -135,7 +135,7 @@ export function useSpotlight() {
   };
 }
 
-// Section label: K.A.L.E.'s gold, as a HUD tick and a mono caption. Every section opens with one,
+// Section label: Kyle's gold, as a HUD tick and a mono caption. Every section opens with one,
 // so the guide's colour runs through the whole page, not just the landing.
 export function Eyebrow({ children, className = "" }) {
   return (

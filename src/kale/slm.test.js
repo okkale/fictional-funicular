@@ -11,7 +11,7 @@ const ask = (q) => vet(model.generate(q));
 // What a visitor gets: the model, checked against the keyword rules (as in store.js).
 const reply = (q) => pickAnswer(ask(q), matchIntent(q)) ?? answer(q);
 
-describe("K.A.L.E. small language model", () => {
+describe("Kyle small language model", () => {
   it("matches PyTorch's logits for the same weights", () => {
     const js = model.logitsFor(`\x02${ref.q}\x03`);
     ref.logits.forEach((v, i) => expect(js[i]).toBeCloseTo(v, 1));

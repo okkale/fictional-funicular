@@ -1,8 +1,7 @@
-// What K.A.L.E. says out loud for a line it shows on screen. Text-to-speech voices stumble on
+// What Kyle says out loud for a line it shows on screen. Text-to-speech voices stumble on
 // acronyms, product names and addresses, so these get spelled the way a person would say them.
 // Used both when recording the neural voice lines (slm/record_voice.py) and by the browser voice.
 const SAY = [
-  [/K\.A\.L\.E\./g, "Kahlay"],
   [/\bKale\b/g, "Kahlay"], // his surname, not the vegetable
   [/kaleomkar1011@gmail\.com/gi, "Kahlay omkar one zero one one, at gmail dot com"],
   [/TriHub/g, "Try-hub"],

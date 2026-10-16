@@ -1,4 +1,4 @@
-// Shared K.A.L.E. state: chat log, voice, tour. One store so the landing greeter and the
+// Shared Kyle state: chat log, voice, tour. One store so the landing greeter and the
 // corner dock speak with the same voice and the same memory.
 import { useSyncExternalStore } from "react";
 import { profile } from "../data";
@@ -120,7 +120,7 @@ async function goStep(index) {
   await landed();
   if (token !== tourToken) return;
   const spoken = say(step.line);
-  // Sections taller than the visible area get a slow pan to their end while K.A.L.E. talks,
+  // Sections taller than the visible area get a slow pan to their end while Kyle talks,
   // so every part of the section passes through view before the next stop.
   const pan = panFor(step.target, step.through);
   const hold = Math.max(6500, step.line.length * 65, pan ? pan.distance * 7 + 2800 : 0);

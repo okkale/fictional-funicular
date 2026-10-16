@@ -1,5 +1,5 @@
-"""Record K.A.L.E.'s lines with a neural male voice (Microsoft en-CA-LiamNeural, Canadian English,
-through the edge-tts package). Every line K.A.L.E. can say is fixed text (tour narration, keyword
+"""Record Kyle's lines with a neural male voice (Microsoft en-CA-LiamNeural, Canadian English,
+through the edge-tts package). Every line Kyle can say is fixed text (tour narration, keyword
 answers and the model's answers), so each gets an MP3 and the site plays it instead of the
 browser's built-in voice. Pronunciation comes from src/kale/speakable.js.
 

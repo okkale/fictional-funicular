@@ -4,7 +4,7 @@ import { LAYERS } from "./hudLayers";
 import { level } from "./voice";
 
 /*
-  Canvas compositor for the K.A.L.E. HUD. Fills its parent (square), DPR-aware.
+  Canvas compositor for the Kyle HUD. Fills its parent (square), DPR-aware.
   compact: dock size, skips the decorative full-only layers.
   boot: when true, layers draw on over `bootMs`; otherwise the HUD appears fully drawn.
   tint: "idle" | "listening" | "speaking".
