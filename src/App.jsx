@@ -1,5 +1,6 @@
 import { MotionConfig } from "motion/react";
 import Nav from "./components/Nav";
+import { still } from "./perf";
 import Landing from "./kale/Landing";
 import Kale from "./kale/Kale";
 import Hero from "./components/Hero";
@@ -12,7 +13,7 @@ import { Contact, Experience, Metrics, Stack, Systems } from "./components/Secti
 
 export default function App() {
   return (
-    <MotionConfig reducedMotion="user">
+    <MotionConfig reducedMotion={still ? "always" : "never"}>
       <div className="grain" aria-hidden />
       <CursorGlow />
       <Nav />

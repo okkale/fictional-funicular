@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotion } from "../perf";
 import { ArrowUpRight, Copy, Check, GithubLogo, LinkedinLogo, Robot, Lightning, Browser, TreeStructure, Graph } from "@phosphor-icons/react";
 import { experience, logos, metrics, profile, systems } from "../data";
 import { CountUp, EASE, Eyebrow, Magnetic, Reveal, SectionTitle, Tilt, useSpotlight } from "./ui";

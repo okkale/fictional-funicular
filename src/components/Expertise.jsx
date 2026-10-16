@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
+import { useReducedMotion } from "../perf";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import { expertise } from "../data";
 import { runAction } from "../kale/store";

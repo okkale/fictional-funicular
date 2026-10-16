@@ -1,4 +1,5 @@
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
+import { useReducedMotion } from "../perf";
 import { CaretLeft, CaretRight, Pause, Play, X } from "@phosphor-icons/react";
 import Orb from "./Orb";
 import Typed from "./Typed";

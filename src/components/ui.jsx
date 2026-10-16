@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { animate, motion, useInView, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { animate, motion, useInView, useMotionValue, useSpring } from "motion/react";
+import { useReducedMotion } from "../perf";
 
 export const EASE = [0.16, 1, 0.3, 1];
 

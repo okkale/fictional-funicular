@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useReducedMotion } from "motion/react";
+import { useReducedMotion } from "../perf";
 
 // Types text out a few characters per tick, like a terminal.
 export default function Typed({ text, speed = 14, step = 2, onDone }) {

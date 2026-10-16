@@ -160,14 +160,13 @@ body {
   animation: blink 1.6s ease-in-out infinite;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  .marquee-track,
-  .live-dot {
-    animation: none;
-  }
+/* Motion off only on request (?still, see src/perf.js), not from the OS setting. */
+html.still {
+  scroll-behavior: auto;
+}
+html.still .marquee-track,
+html.still .live-dot {
+  animation: none;
 }
 
 /* Component classes live in a layer so Tailwind utilities (fixed, absolute…) can override them. */
@@ -262,6 +261,27 @@ body {
 .portal-spin { animation: portal-spin 28s linear infinite; }
 
 
-@media (prefers-reduced-motion: reduce) {
-  .portal-spin { animation: none; }
+html.still .portal-spin { animation: none; }
+
+/* Lite mode (src/perf.js): same page and motion, minus the blurs that re-sample the page every
+   frame. Glass panels get a more opaque fill, entrance blurs become plain fades, and the one big
+   blurred light becomes a soft gradient, which looks the same and costs nothing. */
+html.lite *,
+html.lite *::before,
+html.lite *::after {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html.lite [style*="filter"] {
+  filter: none !important;
+}
+html.lite .blur-\[120px\] {
+  filter: none;
+  background: radial-gradient(closest-side, rgb(2 82 172 / 0.2), transparent);
+}
+html.lite .bg-chrome\/70,
+html.lite .bg-chrome\/75,
+html.lite .bg-chrome\/80,
+html.lite .bg-chrome\/85 {
+  background-color: rgb(5 8 18 / 0.94);
 }

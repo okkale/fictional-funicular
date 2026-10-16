@@ -1,7 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
+import { useReducedMotion } from "../perf";
 import { ArrowRight, DownloadSimple, SpeakerHigh, SpeakerSlash } from "@phosphor-icons/react";
-import Orb from "./Orb";
 import Typed from "./Typed";
 import { NAME } from "./intents";
 import { ask, kale, setVoice, startTour, useKale } from "./store";
@@ -12,6 +12,9 @@ import { EASE } from "../components/ui";
 import { Monogram } from "../components/Nav";
 
 const Sphere = lazy(() => import("./Sphere"));
+// No WebGL (hardware acceleration off): the same sphere, drawn with canvas 2D. `?2d` forces it.
+const Sphere2D = lazy(() => import("./Sphere2D"));
+const hasWebgl = () => typeof window === "undefined" || !new URLSearchParams(window.location.search).has("2d");
 
 /*
   Page 1: Kyle The holographic sphere fills the screen; the UI is three things only:
@@ -41,7 +44,7 @@ export default function Landing() {
   const [bootDone, setBootDone] = useState(false);
   const booted = bootDone || !!reduce;
   const [skip, setSkip] = useState(false);
-  const [webgl, setWebgl] = useState(true);
+  const [webgl, setWebgl] = useState(hasWebgl);
   const [q, setQ] = useState("");
   const [asked, setAsked] = useState(false);
   const onFail = useCallback(() => setWebgl(false), []);
@@ -81,17 +84,13 @@ export default function Landing() {
     <section id="top" ref={wrap} className="relative h-[100dvh] overflow-hidden bg-bg" aria-label={`${NAME}, Omkar's portfolio assistant`}>
       {/* Sphere: fixed and in front during the hand-off; the UI below sits above it */}
       <motion.div style={{ opacity: stageOpacity, visibility: stageVisibility }} className="pointer-events-none fixed inset-0 z-30 bg-bg">
-        {webgl ? (
-          <Suspense fallback={null}>
+        <Suspense fallback={null}>
+          {webgl ? (
             <Sphere key={skip ? "skip" : "boot"} progress={reduce ? null : p} boot={!skip} bootMs={BOOT_MS} reduce={!!reduce} onFail={onFail} className="h-full w-full" />
-          </Suspense>
-        ) : (
-          <div className="grid h-full place-items-center">
-            <div className="w-[min(80vw,60vh)]">
-              <Orb boot={!skip} bootMs={BOOT_MS} />
-            </div>
-          </div>
-        )}
+          ) : (
+            <Sphere2D key={skip ? "skip" : "boot"} progress={reduce ? null : p} boot={!skip} bootMs={BOOT_MS} reduce={!!reduce} className="h-full w-full" />
+          )}
+        </Suspense>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_70%_at_50%_40%,transparent_45%,rgba(3,3,6,0.9)_100%)]" aria-hidden />
         {/* The page-2 room light already falls here, blue from the left and red from the right, so the
             gold sphere sits in the same space the portrait does. Kept to the edges, off the sphere. */}

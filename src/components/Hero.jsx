@@ -1,5 +1,6 @@
 import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useReducedMotion } from "../perf";
 import { ArrowDownRight, DownloadSimple } from "@phosphor-icons/react";
 import { EASE, Magnetic, Scramble } from "./ui";
 import { profile } from "../data";

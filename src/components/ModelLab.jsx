@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import { motion, AnimatePresence, useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
+import { motion, AnimatePresence, useMotionValueEvent, useScroll } from "motion/react";
+import { useReducedMotion } from "../perf";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import { erpPipeline, erpScreens, erpStack, systems } from "../data";
 import { EASE, Eyebrow, Reveal, SectionTitle } from "./ui";
