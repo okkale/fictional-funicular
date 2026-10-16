@@ -4,14 +4,14 @@ import { Microphone, PaperPlaneRight, SpeakerHigh, SpeakerSlash, X } from "@phos
 import Orb from "./Orb";
 import Typed from "./Typed";
 import { NAME, SUGGEST } from "./intents";
-import { ask, kale, setVoice, useKale } from "./store";
+import { ask, kale, setVoice, useKale, warmModel } from "./store";
 import TourBar from "./TourBar";
 import { listen, supported } from "./voice";
 import { EASE } from "../components/ui";
 
 /* Corner dock: K.A.L.E. shrinks here once the visitor leaves the landing HUD. Ctrl/⌘ K toggles. */
 export default function Kale() {
-  const { open, log, voiceOn, speaking, listening, tour } = useKale();
+  const { open, log, voiceOn, speaking, listening, tour, slm, thinking } = useKale();
   const [shown, setShown] = useState(false);
   const [input, setInput] = useState("");
   const stopRef = useRef(null);
@@ -44,7 +44,10 @@ export default function Kale() {
     if (open && kale.get().log.length === 0) {
       kale.set({ log: [{ who: "ai", text: `${NAME} online. Ask about Omkar's research, projects, the ERP, or how to hire him.` }] });
     }
-    if (open) setTimeout(() => inputRef.current?.focus(), 250);
+    if (open) {
+      warmModel();
+      setTimeout(() => inputRef.current?.focus(), 250);
+    }
   }, [open]);
 
   useEffect(() => {
@@ -67,6 +70,18 @@ export default function Kale() {
   };
 
   const tint = listening ? "listening" : speaking ? "speaking" : "idle";
+  const busy = thinking || speaking || listening;
+  const status = listening
+    ? "Listening…"
+    : thinking
+      ? "Thinking…"
+      : speaking
+        ? "Speaking…"
+        : slm === "ready"
+          ? "Online · on-device model"
+          : slm === "loading"
+            ? "Loading on-device model…"
+            : "Online · keyword mode";
   const visible = (shown || open) && !tour; // the tour bar carries its own controls
   const lastAi = [...log].reverse().find((m) => m.who === "ai");
   const subtitle = !open && !tour && speaking && lastAi;
@@ -133,10 +148,17 @@ export default function Kale() {
             transition={{ duration: 0.45, ease: EASE }}
             className="hud-panel fixed bottom-24 right-4 z-50 flex max-h-[min(620px,calc(100dvh-8rem))] w-[min(420px,calc(100vw-2rem))] origin-bottom-right flex-col overflow-hidden bg-chrome/90 shadow-[0_30px_120px_-20px_rgba(0,0,0,0.8)]"
           >
-            <div className="flex items-center justify-between border-b border-[rgba(255,182,72,0.15)] px-5 py-3.5">
-              <div>
-                <p className="hud-text font-mono text-sm tracking-[0.2em]">{NAME}</p>
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">Knowledge Assistant for Learning & Engineering</p>
+            <div className="flex items-center gap-3 border-b border-[rgba(255,182,72,0.15)] px-4 py-3">
+              <span className="relative block h-11 w-11 shrink-0 rounded-full border border-[rgba(255,182,72,0.35)] bg-ink/60">
+                <Orb compact tint={tint} />
+                <span
+                  aria-hidden="true"
+                  className={`absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-chrome ${busy ? "bg-accent" : slm === "ready" ? "bg-hud" : "animate-pulse bg-muted"}`}
+                />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="hud-text font-mono text-sm tracking-[0.2em]" title="Knowledge Assistant for Learning & Engineering">{NAME}</p>
+                <p className="truncate font-mono text-[11px] text-muted" aria-live="polite">{status}</p>
               </div>
               <div className="flex items-center gap-1">
                 {supported.tts && (
@@ -169,6 +191,7 @@ export default function Kale() {
                   )}
                 </motion.div>
               ))}
+              {thinking && <p className="font-mono text-[13px] text-muted"><span className="hud-text mr-2">&gt;</span>thinking…</p>}
             </div>
 
             <div className="flex gap-2 overflow-x-auto px-5 pb-3 [scrollbar-width:none]">

@@ -2,8 +2,9 @@
 // corner dock speak with the same voice and the same memory.
 import { useSyncExternalStore } from "react";
 import { profile } from "../data";
-import { answer, TOURS } from "./intents";
+import { answer, matchIntent, TOURS } from "./intents";
 import { speak, stopSpeaking, supported } from "./voice";
+import { loadModel, pickAnswer, vet } from "./slm";
 import { glideTo, isGliding, sectionY, stopGlide } from "./glide";
 
 let state = {
@@ -13,6 +14,8 @@ let state = {
   open: false,
   tour: null, // { id, index, playing } while a guided tour runs
   log: [],
+  slm: "idle", // the small language model: idle | loading | ready | off
+  thinking: false,
 };
 const subs = new Set();
 const set = (patch) => {
@@ -49,10 +52,33 @@ export function say(text) {
   return speak(text, { onStart: () => set({ speaking: true }), onEnd: () => set({ speaking: false }) });
 }
 
-export function ask(raw) {
-  const a = answer(raw);
-  if (!a) return;
-  set({ log: [...state.log, { who: "you", text: raw.trim() }] });
+// Start fetching the model's weights (about 1.7 MB) before the first question needs them.
+export function warmModel() {
+  if (state.slm !== "idle") return loadModel();
+  set({ slm: "loading" });
+  return loadModel().then((m) => (set({ slm: m ? "ready" : "off" }), m));
+}
+
+// The model answers when it is confident and its answer passes `vet`; otherwise, or while the
+// weights are still downloading, the keyword rules answer.
+async function modelAnswer(q) {
+  const model = await Promise.race([warmModel(), wait(1500).then(() => null)]);
+  if (!model) return null;
+  return vet(await model.generate(q));
+}
+
+export async function ask(raw) {
+  const q = raw.trim();
+  if (!q) return;
+  set({ log: [...state.log, { who: "you", text: q }], thinking: true });
+  let model = null;
+  try {
+    model = await modelAnswer(q);
+  } catch {
+    model = null;
+  }
+  const a = pickAnswer(model, matchIntent(q)) ?? answer(q);
+  set({ thinking: false });
   runAction(a.action);
   say(a.text);
 }
