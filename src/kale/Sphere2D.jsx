@@ -14,7 +14,13 @@ import { BOKEH_COLOR, DUST_COLOR, RINGS, baseZFor, buildModel, ease, frameCamera
   Same props as Sphere.
 */
 
-const rgb = (c, k = 1) => `rgb(${Math.round(Math.min(1, c.r * k) * 255)},${Math.round(Math.min(1, c.g * k) * 255)},${Math.round(Math.min(1, c.b * k) * 255)})`;
+// The model's colours are linear (three.js colour management); a canvas wants sRGB. Converting
+// keeps this version the same gold as the WebGL one instead of a darker orange.
+const srgb = (x) => {
+  x = Math.min(1, Math.max(0, x));
+  return Math.round((x <= 0.0031308 ? x * 12.92 : 1.055 * Math.pow(x, 1 / 2.4) - 0.055) * 255);
+};
+const rgb = (c, k = 1) => `rgb(${srgb(c.r * k)},${srgb(c.g * k)},${srgb(c.b * k)})`;
 
 // Group a line geometry's segments by colour so each colour is one path and one stroke.
 function batches(geometry) {
@@ -23,7 +29,7 @@ function batches(geometry) {
   for (let s = 0; s < col.length / 6; s++) {
     const r = col[s * 6], g = col[s * 6 + 1], b = col[s * 6 + 2];
     const key = `${Math.round(r * 24)},${Math.round(g * 24)},${Math.round(b * 24)}`;
-    if (!map.has(key)) map.set(key, { style: `rgb(${Math.round(Math.min(1, r) * 255)},${Math.round(Math.min(1, g) * 255)},${Math.round(Math.min(1, b) * 255)})`, segs: [] });
+    if (!map.has(key)) map.set(key, { style: `rgb(${srgb(r)},${srgb(g)},${srgb(b)})`, segs: [] });
     map.get(key).segs.push(s);
   }
   return [...map.values()];
@@ -85,7 +91,7 @@ export default function Sphere2D({ progress = null, boot = true, bootMs = 2800, 
     let dpr = 1;
     let W = 1, H = 1, baseZ = 8.2;
     const resize = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 1) * (perf.lite ? 0.85 : 1);
+      dpr = Math.min(window.devicePixelRatio || 1, 1.25);
       const w = el.clientWidth || 1;
       const h = el.clientHeight || 1;
       W = canvas.width = Math.round(w * dpr);
@@ -176,7 +182,8 @@ export default function Sphere2D({ progress = null, boot = true, bootMs = 2800, 
 
       // Filaments, drawn on during boot
       ctx.lineWidth = Math.max(1, dpr);
-      ctx.globalAlpha = Math.min(1, b * 1.2);
+      // Lines add up faster on a canvas (sRGB) than in WebGL (linear): draw them dimmer to match.
+      ctx.globalAlpha = Math.min(1, b * 1.2) * 0.55;
       for (const l of lines) {
         mvp.multiplyMatrices(viewProj, l.obj.matrixWorld);
         const e = mvp.elements;
@@ -288,9 +295,11 @@ export default function Sphere2D({ progress = null, boot = true, bootMs = 2800, 
       sctx[1].globalCompositeOperation = "copy";
       sctx[1].drawImage(small[0], 0, 0, small[1].width, small[1].height);
       ctx.imageSmoothingEnabled = true;
-      ctx.globalAlpha = Math.min(1, strength * 0.8);
+      // Lite: a faint halo only, so the lines stay crisp.
+      const halo = perf.lite ? 0.35 : 1;
+      ctx.globalAlpha = Math.min(1, strength * 0.8 * halo);
       ctx.drawImage(small[0], 0, 0, W, H);
-      ctx.globalAlpha = Math.min(1, strength * 1.2);
+      ctx.globalAlpha = Math.min(1, strength * 1.2 * halo);
       ctx.drawImage(small[1], 0, 0, W, H);
 
       if (!reduce && running) raf = requestAnimationFrame(frame);

@@ -23,8 +23,10 @@ import { BOKEH_COLOR, DUST_COLOR, RINGS, baseZFor, buildModel, ease, frameCamera
 
   Props: progress (MotionValue 0..1, landing scroll; the camera flies into the core),
   boot (assemble on mount), bootMs, reduce (draw one still frame), onFail (WebGL unavailable).
-  Lite mode (src/perf.js) keeps the same picture but renders it at 1x resolution, with bloom at
-  a third size and a 30 fps cap. It switches on for software WebGL, and mid-flight when the frame
+  Lite mode (src/perf.js) keeps the same picture at full sharpness but switches the bloom pass off
+  (the costly part); the filaments are drawn a little brighter instead so they still read as
+  light, with a 30 fps cap. It still renders through the composer, so light adds up in linear
+  space and is converted once at the end: the same gold as full mode, not a darker orange. It switches on for software WebGL, and mid-flight when the frame
   rate sags, without rebuilding the scene.
 */
 
@@ -101,7 +103,7 @@ export default function Sphere({ progress = null, boot = true, bootMs = 2800, re
     const info = gl.getExtension("WEBGL_debug_renderer_info");
     if (/swiftshader|llvmpipe|softpipe|software|basic render/i.test(String(gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER)))) setLite(true);
     let lite = perf.lite;
-    const pixelRatio = () => Math.min(window.devicePixelRatio || 1, lite ? 1 : 1.25);
+    const pixelRatio = () => Math.min(window.devicePixelRatio || 1, 1.25);
     let dpr = pixelRatio();
     renderer.setPixelRatio(dpr);
     renderer.setClearColor("#000000", 1);
@@ -131,6 +133,12 @@ export default function Sphere({ progress = null, boot = true, bootMs = 2800, re
     beamLines.userData.count = model.beams.attributes.position.count;
     root.add(beamLines);
     const allLines = [...shells, circuitLines, beamLines];
+    // Lite has no bloom: lift the filaments and dust so they keep their brightness, crisp.
+    const liteGain = () => {
+      allLines.forEach((l) => l.material.color.setScalar(lite ? 1.3 : 1));
+      dustMat.uniforms.uGain.value = lite ? 0.9 : 0.75;
+      bloom.enabled = !lite;
+    };
 
     const dustMat = track(pointsMaterial(DUST_COLOR.clone(), 0.0, 0.75));
     const dust = new THREE.Points(track(model.dust), dustMat);
@@ -161,6 +169,7 @@ export default function Sphere({ progress = null, boot = true, bootMs = 2800, re
     composer.addPass(new RenderPass(scene, camera));
     const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.32, 0.2, 0.3);
     composer.addPass(bloom);
+    liteGain();
     composer.addPass(new OutputPass());
 
     let baseZ = 7;
@@ -171,10 +180,8 @@ export default function Sphere({ progress = null, boot = true, bootMs = 2800, re
       renderer.domElement.style.width = "100%";
       renderer.domElement.style.height = "100%";
       composer.setSize(w, h);
-      // Bloom at half resolution (a third in lite): it is a soft edge glow, so the cost drops ~4x
-      // with no visible loss.
-      const k = lite ? 3 : 2;
-      bloom.setSize(Math.round((w * dpr) / k), Math.round((h * dpr) / k));
+      // Bloom at half resolution: it is a soft edge glow, so the cost drops ~4x with no visible loss.
+      bloom.setSize(Math.round((w * dpr) / 2), Math.round((h * dpr) / 2));
       camera.aspect = w / h;
       // Keep the whole sphere in frame on narrow screens.
       baseZ = baseZFor(camera.aspect);
@@ -185,6 +192,7 @@ export default function Sphere({ progress = null, boot = true, bootMs = 2800, re
     resize();
     const stopLite = onLiteChange((on) => {
       lite = on;
+      liteGain();
       dpr = pixelRatio();
       renderer.setPixelRatio(dpr);
       resize();
@@ -264,7 +272,7 @@ export default function Sphere({ progress = null, boot = true, bootMs = 2800, re
       rings.forEach((m, i) => {
         m.rotation.z += (i % 2 ? -1 : 1) * dt * (0.2 + i * 0.12);
       });
-      glow.material.opacity = (0.22 + lv * 0.3) * (1 - fly * 0.95);
+      glow.material.opacity = (0.22 + lv * 0.3) * (1 - fly * 0.95) * (lite ? 0.55 : 1);
       rings.forEach((m) => (m.material.opacity = m.userData.o * (1 - fly * 0.7)));
 
       frameCamera(camera, baseZ, mouse, fly);
