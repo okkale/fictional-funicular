@@ -120,16 +120,20 @@ async function goStep(index) {
   await landed();
   if (token !== tourToken) return;
   const spoken = say(step.line);
+  // With voice on, the stop lasts as long as Kyle talks; muted, as long as the line takes to read.
+  const read = Math.min(14000, Math.max(3500, step.line.length * 55));
   // Sections taller than the visible area get a slow pan to their end while Kyle talks,
   // so every part of the section passes through view before the next stop.
   const pan = panFor(step.target, step.through);
-  const hold = Math.max(6500, step.line.length * 65, pan ? pan.distance * 7 + 2800 : 0);
+  const panMs = pan ? Math.max(2600, Math.min(read, pan.distance * 5 + 1200)) : 0;
   if (pan) {
-    await wait(1400); // let the headline register first
+    await wait(900); // let the headline register first
     if (token !== tourToken) return;
-    glideTo(pan.to, { ms: hold - 2400, ease: "pan" });
+    glideTo(pan.to, { ms: panMs, ease: "pan" });
   }
-  await Promise.all([spoken, wait(pan ? hold - 1400 : hold)]);
+  await Promise.all([state.voiceOn ? spoken : null, wait(state.voiceOn ? 1500 : read), wait(panMs)]);
+  if (token !== tourToken || !state.tour?.playing) return;
+  await wait(700); // a beat between stops, not a pause
   if (token !== tourToken || !state.tour?.playing) return;
   goStep(index + 1);
 }

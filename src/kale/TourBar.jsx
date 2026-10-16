@@ -31,7 +31,7 @@ export default function TourBar() {
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       exit={reduce ? { opacity: 0 } : { opacity: 0, y: 40, filter: "blur(10px)" }}
       transition={{ type: "spring", bounce: 0, duration: 0.5 }}
-      className="fixed inset-x-3 bottom-3 z-50 mx-auto max-w-[620px] overflow-hidden rounded-[18px] border border-white/10 bg-chrome/85 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_24px_80px_-24px_rgba(0,0,0,0.8)] backdrop-blur-xl md:bottom-4"
+      className="fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom,0px))] z-50 mx-auto max-w-[620px] overflow-hidden rounded-[18px] border border-white/10 bg-chrome/85 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_24px_80px_-24px_rgba(0,0,0,0.8)] backdrop-blur-xl md:bottom-[calc(1rem+env(safe-area-inset-bottom,0px))]"
     >
       {/* Progress: a single growing hairline */}
       <motion.div

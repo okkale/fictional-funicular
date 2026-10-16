@@ -47,7 +47,7 @@ export default function Nav() {
       <motion.header
         animate={{ y: hidden || tour ? "-120%" : 0 }}
         transition={{ duration: 0.5, ease: EASE }}
-        className="fixed inset-x-0 top-0 z-40 px-4 pt-3 md:px-6"
+        className="fixed inset-x-0 top-0 z-40 px-4 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] md:px-6"
       >
         <nav
           className={`mx-auto flex h-14 max-w-[1280px] items-center justify-between rounded-full border px-2 pl-2 transition-colors duration-500 ${
@@ -88,7 +88,7 @@ export default function Nav() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex flex-col bg-bg/95 px-6 pt-6 backdrop-blur-xl lg:hidden"
+            className="fixed inset-0 z-50 flex flex-col overscroll-contain bg-bg/95 px-6 pb-[env(safe-area-inset-bottom,0px)] pt-[calc(1.5rem+env(safe-area-inset-top,0px))] backdrop-blur-xl lg:hidden"
           >
             <div className="flex items-center justify-between">
               <Monogram />

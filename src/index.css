@@ -54,6 +54,32 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 88px;
+  /* Phones: no grey tap flash, no font inflation in landscape, and no pull-to-refresh fighting
+     the landing hand-off (the page still scrolls normally). */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior-y: none;
+}
+
+/* Controls fire on tap without the double-tap wait, and a long press doesn't select their label. */
+button,
+a,
+[role="button"] {
+  touch-action: manipulation;
+}
+button,
+[role="button"] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* iOS zooms into any field under 16px on focus and never zooms back. */
+@media (pointer: coarse) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
 }
 /* Page 2 sits exactly one screen down, flush with the top: cancel the nav offset so anchor jumps
    and Kyle's scrolls land on the same seam the landing snap uses. */
@@ -124,8 +150,10 @@ body {
   transition: opacity 0.3s;
   pointer-events: none;
 }
-.spotlight:hover::before {
-  opacity: 0.9;
+@media (hover: hover) and (pointer: fine) {
+  .spotlight:hover::before {
+    opacity: 0.9;
+  }
 }
 
 /* Logo glyphs tinted by theme via mask. */
@@ -135,8 +163,10 @@ body {
   mask: var(--src) center / contain no-repeat;
   transition: background-color 0.3s;
 }
-.logo-glyph:hover {
-  background-color: var(--text);
+@media (hover: hover) and (pointer: fine) {
+  .logo-glyph:hover {
+    background-color: var(--text);
+  }
 }
 
 @keyframes marquee {
@@ -147,8 +177,10 @@ body {
 .marquee-track {
   animation: marquee 42s linear infinite;
 }
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
+@media (hover: hover) and (pointer: fine) {
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
 }
 
 @keyframes blink {
@@ -222,10 +254,13 @@ html.still .live-dot {
   mask-composite: intersect;
 }
 @media (max-width: 767px) {
-  /* Phones: the photo spans the width, so only its bottom fades (into the copy below). */
+  /* Phones: a crisp round avatar (the frame crops it), no edge fades and no scroll drift. */
   .hero-portrait {
-    -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
-    mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .hero-photo {
+    transform: none !important;
   }
 }
 .hero::before {

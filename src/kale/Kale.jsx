@@ -100,7 +100,7 @@ export default function Kale() {
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.4, ease: EASE }}
             aria-live="polite"
-            className="hud-panel fixed bottom-24 right-4 z-50 w-[min(380px,calc(100vw-2rem))] bg-chrome/85 px-4 py-3 font-mono text-[13px] leading-relaxed text-fg"
+            className="hud-panel fixed bottom-[calc(6rem+env(safe-area-inset-bottom,0px))] right-4 z-50 w-[min(380px,calc(100vw-2rem))] bg-chrome/85 px-4 py-3 font-mono text-[13px] leading-relaxed text-fg"
           >
             <span className="hud-text mr-2">&gt;</span>
             <Typed text={lastAi.text} speed={18} />
@@ -115,7 +115,7 @@ export default function Kale() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.6, y: 20 }}
             transition={{ duration: 0.5, ease: EASE }}
-            className="fixed bottom-5 right-5 z-50 flex items-center gap-2"
+            className="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] right-5 z-50 flex items-center gap-2"
           >
             <button
               onClick={() => setOpen((o) => !o)}
@@ -146,7 +146,7 @@ export default function Kale() {
             animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
             exit={{ opacity: 0, y: 16, scale: 0.97, filter: "blur(6px)" }}
             transition={{ duration: 0.45, ease: EASE }}
-            className="hud-panel fixed bottom-24 right-4 z-50 flex max-h-[min(620px,calc(100dvh-8rem))] w-[min(420px,calc(100vw-2rem))] origin-bottom-right flex-col overflow-hidden bg-chrome/90 shadow-[0_30px_120px_-20px_rgba(0,0,0,0.8)]"
+            className="hud-panel fixed bottom-[calc(6rem+env(safe-area-inset-bottom,0px))] right-4 z-50 flex max-h-[min(620px,calc(100dvh-8rem))] w-[min(420px,calc(100vw-2rem))] origin-bottom-right flex-col overflow-hidden bg-chrome/90 shadow-[0_30px_120px_-20px_rgba(0,0,0,0.8)]"
           >
             <div className="flex items-center gap-3 border-b border-[rgba(255,182,72,0.15)] px-4 py-3">
               <span className="relative block h-11 w-11 shrink-0 rounded-full border border-[rgba(255,182,72,0.35)] bg-ink/60">
@@ -172,7 +172,7 @@ export default function Kale() {
               </div>
             </div>
 
-            <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-5 py-4" aria-live="polite">
+            <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto overscroll-contain px-5 py-4" aria-live="polite">
               {log.map((m, i) => (
                 <motion.div
                   key={i}
