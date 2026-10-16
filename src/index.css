@@ -1,0 +1,267 @@
+@import "tailwindcss";
+
+/* Brand tokens. One cinematic dark theme, after the Sharkfold palette:
+   near-black stage, navy and electric blue light, signal red, wine shadow.
+   K.A.L.E. (the guide) is warm gold, the only warm hue; everything else is blue / red light. */
+:root {
+  --bg: #030306;
+  --surface: #0a0d18;
+  --surface-2: #121a2e;
+  /* Fixed chrome (nav, K.A.L.E. dock, chat, tour bar): one near-black navy, used at 70–90%. */
+  --chrome: #050812;
+  --line: rgba(137, 148, 180, 0.22);
+  --text: #f6f6f6;
+  --muted: #a6a9af;
+  --steel: #8994b4;
+  --navy: #092659;
+  --blue: #0252ac;
+  --blue-glow: #5a9dff;
+  --red: #d31816;
+  --red-glow: #ff3b3b;
+  --wine: #591e28;
+  --accent: #ff3b3b;
+  --accent-fg: #ff6a63;
+  --ink: #030306;
+  --hud: #ffb648;
+  --grain-opacity: 0.05;
+  color-scheme: dark;
+}
+
+@theme {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+  --font-display: "Big Shoulders Display Variable", "Geist Variable", sans-serif;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-chrome: var(--chrome);
+  --color-line: var(--line);
+  --color-fg: var(--text);
+  --color-muted: var(--muted);
+  --color-steel: var(--steel);
+  --color-navy: var(--navy);
+  --color-blue: var(--blue);
+  --color-blue-glow: var(--blue-glow);
+  --color-red: var(--red);
+  --color-wine: var(--wine);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-ink: var(--ink);
+  --color-hud: var(--hud);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+}
+/* Page 2 sits exactly one screen down, flush with the top: cancel the nav offset so anchor jumps
+   and K.A.L.E.'s scrolls land on the same seam the landing snap uses. */
+#hero {
+  scroll-margin-top: -88px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.4s var(--ease-out-expo), color 0.4s var(--ease-out-expo);
+}
+
+/* Keyboard focus: K.A.L.E. gold ring, offset so it reads on white, gold and dark fills alike.
+   In the base layer so a component can still override it with a utility. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--hud);
+    outline-offset: 3px;
+  }
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+/* Copy that sits over the K.A.L.E. sphere: a dark halo keeps it legible over the bright filaments. */
+.on-glow {
+  text-shadow: 0 1px 2px rgba(3, 3, 6, 0.9), 0 0 18px rgba(3, 3, 6, 0.85);
+}
+
+/* Fixed grain layer: never on scrolling containers. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Dot field used behind sections that need texture. */
+.dot-field {
+  background-image: radial-gradient(var(--line) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Spotlight card: border lights up under the cursor (vars set in JS). */
+.spotlight {
+  position: relative;
+  isolation: isolate;
+}
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(320px circle at var(--mx, -999px) var(--my, -999px), var(--hud), transparent 60%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.spotlight:hover::before {
+  opacity: 0.9;
+}
+
+/* Logo glyphs tinted by theme via mask. */
+.logo-glyph {
+  background-color: var(--muted);
+  -webkit-mask: var(--src) center / contain no-repeat;
+  mask: var(--src) center / contain no-repeat;
+  transition: background-color 0.3s;
+}
+.logo-glyph:hover {
+  background-color: var(--text);
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 42s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+.live-dot {
+  animation: blink 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .marquee-track,
+  .live-dot {
+    animation: none;
+  }
+}
+
+/* Component classes live in a layer so Tailwind utilities (fixed, absolute…) can override them. */
+@layer components {
+  /* Display type: condensed poster caps, second half of a headline in muted. */
+  .display {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 0.86;
+  }
+
+  /* Glass panel used across sections. */
+  /* No backdrop blur here: it re-samples the page on every scroll frame. Fixed chrome keeps it. */
+  .glass {
+    background: linear-gradient(160deg, rgba(18, 26, 46, 0.92), rgba(8, 10, 20, 0.9));
+    border: 1px solid var(--line);
+  }
+
+  /* K.A.L.E. HUD panel: glass with gold hairline corners. */
+  .hud-panel {
+    position: relative;
+    background: linear-gradient(180deg, rgba(255, 182, 72, 0.06), rgba(255, 182, 72, 0.015));
+    border: 1px solid rgba(255, 182, 72, 0.18);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .hud-panel::before,
+  .hud-panel::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: var(--hud);
+    border-style: solid;
+  }
+  .hud-panel::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  .hud-panel::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+  .hud-text { color: var(--hud); text-shadow: 0 0 12px rgba(255, 182, 72, 0.55); }
+}
+
+/* Page 2 portrait (after the Sharkfold reference): a tall photo on the right whose dark edges
+   fade into the page, with a soft blue / red glow over the scene (.hero::before). */
+.hero-portrait {
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 22%, #000 82%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 8%, #000 72%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 22%, #000 82%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 8%, #000 72%, transparent 100%);
+  mask-composite: intersect;
+}
+@media (max-width: 767px) {
+  /* Phones: the photo spans the width, so only its bottom fades (into the copy below). */
+  .hero-portrait {
+    -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+  }
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+
+  /* First layer: K.A.L.E.'s gold afterglow at the seam where the sphere dissolves, so the warm
+     landing hands off into the blue / red room instead of cutting to it. */
+  background:
+    radial-gradient(
+      ellipse 55% 28% at 50% 0%,
+      rgba(255, 182, 72, 0.09),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse at 60% 50%,
+      rgba(0, 100, 255, 0.12),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 83% 40%,
+      rgba(255, 35, 65, 0.10),
+      transparent 35%
+    );
+}
+
+@keyframes portal-spin { to { transform: rotate(360deg); } }
+
+
+.portal-spin { animation: portal-spin 28s linear infinite; }
+
+
+@media (prefers-reduced-motion: reduce) {
+  .portal-spin { animation: none; }
+}

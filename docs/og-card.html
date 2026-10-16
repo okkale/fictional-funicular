@@ -1,0 +1,53 @@
+<!doctype html>
+<!--
+  Source for public/og.png (1200×630 link-preview card). Regenerate after editing:
+  "C:/Program Files/Google/Chrome/Application/chrome.exe" --headless=new --disable-gpu --hide-scrollbars \
+    --window-size=1200,630 --screenshot="<repo>/public/og.png" "file:///<repo>/docs/og-card.html"
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<style>
+  @font-face { font-family: "Big Shoulders"; src: url("../node_modules/@fontsource-variable/big-shoulders-display/files/big-shoulders-display-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Geist"; src: url("../node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Geist Mono"; src: url("../node_modules/@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; }
+  :root { --bg: #030306; --text: #f6f6f6; --muted: #a6a9af; --accent: #ff3b3b; --hud: #ffb648; --line: rgba(137,148,180,.16); }
+  * { margin: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; background: var(--bg); color: var(--text); }
+  .card {
+    position: relative; width: 1200px; height: 630px; padding: 64px 72px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    background:
+      radial-gradient(55% 75% at 8% 60%, rgba(2,82,172,.55), transparent 70%),
+      radial-gradient(50% 70% at 98% 45%, rgba(211,24,22,.45), transparent 70%),
+      repeating-linear-gradient(90deg, rgba(137,148,180,.07) 0 2px, transparent 2px 22px),
+      var(--bg);
+  }
+  /* K.A.L.E. sphere hint: concentric gold rings, top right */
+  .rings { position: absolute; right: 70px; top: 50%; width: 360px; height: 360px; transform: translateY(-50%); }
+  .rings span { position: absolute; inset: 0; margin: auto; border-radius: 50%; border: 1.5px solid rgba(255,182,72,.55); box-shadow: 0 0 24px rgba(255,182,72,.35), inset 0 0 24px rgba(255,182,72,.2); }
+  .rings span:nth-child(2) { inset: 60px; opacity: .8; }
+  .rings span:nth-child(3) { inset: 120px; opacity: .9; }
+  .rings span:nth-child(4) { inset: 162px; background: var(--hud); box-shadow: 0 0 60px 20px rgba(255,182,72,.55); }
+  .top { display: flex; align-items: center; gap: 16px; font: 500 22px "Geist Mono"; color: var(--muted); }
+  .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 14px var(--accent); }
+  h1 { font: 800 148px/0.86 "Big Shoulders"; text-transform: uppercase; letter-spacing: -0.01em; }
+  h1 .m { color: var(--muted); }
+  h1 .a { color: var(--accent); }
+  .name { font: 600 40px "Geist"; letter-spacing: -0.02em; }
+  .name span { color: var(--hud); }
+  .sub { margin-top: 10px; font: 400 24px "Geist"; color: var(--muted); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="rings" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <p class="top"><span class="dot"></span>Final-year AI student · open to ML / AI engineer roles</p>
+    <h1>From <span class="m">model</span><br />to <span class="m">product</span><span class="a">.</span></h1>
+    <div>
+      <p class="name">Omkar Kale<span>.</span></p>
+      <p class="sub">Explainable deep learning research · AI agents in shipped software</p>
+    </div>
+  </div>
+</body>
+</html>

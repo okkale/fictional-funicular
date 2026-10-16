@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Omkar Kale · AI Engineer</title>
+    <meta name="description" content="Omkar Kale is a final-year AI engineering student who publishes explainable deep learning research and ships agent-powered ERP, CRM and web systems." />
+    <meta property="og:title" content="Omkar Kale · AI Engineer" />
+    <meta property="og:description" content="Models in research. Agents in production." />
+    <meta property="og:type" content="website" />
+    <!-- Card source: docs/og-card.html. Once deployed, make this an absolute URL (https://<domain>/og.png):
+         LinkedIn, Slack and X ignore relative image paths. -->
+    <meta property="og:image" content="/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="From model to product. Omkar Kale, AI engineering student." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Omkar Kale · AI Engineer" />
+    <meta name="twitter:description" content="Models in research. Agents in production." />
+    <meta name="twitter:image" content="/og.png" />
+    <meta name="theme-color" content="#030306" />
+    <script>
+      // Always open at the top so the K.A.L.E. boot sequence plays.
+      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+      // Preview aid: ?motion forces full motion even when the OS asks for reduced motion.
+      if (new URLSearchParams(location.search).has("motion")) {
+        const mm = window.matchMedia.bind(window);
+        window.matchMedia = (q) =>
+          q.includes("reduced-motion")
+            ? { matches: false, media: q, onchange: null, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {}, dispatchEvent() { return false; } }
+            : mm(q);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
