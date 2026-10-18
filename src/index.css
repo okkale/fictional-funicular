@@ -265,3 +265,13 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .portal-spin { animation: none; }
 }
+
+/* Hide scrollbars while preserving scrolling functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

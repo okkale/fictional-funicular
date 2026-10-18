@@ -2,12 +2,20 @@
 // corner dock speak with the same voice and the same memory.
 import { useSyncExternalStore } from "react";
 import { profile } from "../data";
+<<<<<<< Updated upstream
 import { answer, TOURS } from "./intents";
 import { speak, stopSpeaking, supported } from "./voice";
+=======
+import { answer, matchIntent, TOURS } from "./intents";
+import { speak, stopSpeaking, supported, getVoiceGender, setVoiceGender as applyVoiceGender } from "./voice";
+import { loadModel, pickAnswer, vet } from "./slm";
+>>>>>>> Stashed changes
 import { glideTo, isGliding, sectionY, stopGlide } from "./glide";
+import { recordInteraction, findLearnedAnswer, alterAnswer, getMemoryStats, clearMemory, toggleLearning } from "./memory";
 
 let state = {
   voiceOn: supported.tts,
+  voiceGender: getVoiceGender(), // "female" by default
   speaking: false,
   listening: false,
   open: false,
@@ -43,23 +51,85 @@ export function runAction(action) {
 }
 
 // Say a line: log it and, if voice is on, speak it. Resolves when spoken.
-export function say(text) {
-  set({ log: [...state.log, { who: "ai", text }] });
+export function say(text, meta = null) {
+  set({ log: [...state.log, { who: "ai", text, meta }] });
   if (!state.voiceOn) return Promise.resolve();
-  return speak(text, { onStart: () => set({ speaking: true }), onEnd: () => set({ speaking: false }) });
+  return speak(text, { onStart: () => set({ speaking: true }), onEnd: () => set({ speaking: false }) }, state.voiceGender);
 }
 
+<<<<<<< Updated upstream
 export function ask(raw) {
   const a = answer(raw);
   if (!a) return;
   set({ log: [...state.log, { who: "you", text: raw.trim() }] });
-  runAction(a.action);
-  say(a.text);
+=======
+// Start fetching the model's weights (about 1.7 MB) before the first question needs them.
+export function warmModel() {
+  if (state.slm !== "idle") return loadModel();
+  set({ slm: "loading" });
+  return loadModel().then((m) => (set({ slm: m ? "ready" : "off" }), m));
 }
+
+// The model answers when it is confident and its answer passes `vet`; otherwise, or while the
+// weights are still downloading, the keyword rules answer.
+async function modelAnswer(q) {
+  const model = await Promise.race([warmModel(), wait(1500).then(() => null)]);
+  if (!model) return null;
+  return vet(await model.generate(q));
+}
+
+export async function ask(raw) {
+  const q = raw.trim();
+  if (!q) return;
+  recordInteraction("you", q);
+  set({ log: [...state.log, { who: "you", text: q }], thinking: true });
+
+  // 1. Check self-learned memory & conversational context first
+  const learned = findLearnedAnswer(q);
+  if (learned) {
+    set({ thinking: false });
+    recordInteraction("ai", learned.text);
+    runAction(learned.action);
+    say(learned.text, { source: learned.source || "memory", rawQuestion: q });
+    return;
+  }
+
+  // 2. Query on-device SLM
+  let model = null;
+  const t0 = performance.now();
+  try {
+    model = await modelAnswer(q);
+  } catch {
+    model = null;
+  }
+  const latencyMs = Math.round(performance.now() - t0);
+
+  // 3. Match against intent rules with check
+  const a = pickAnswer(model, matchIntent(q)) ?? answer(q);
+  set({ thinking: false });
+  recordInteraction("ai", a.text);
+>>>>>>> Stashed changes
+  runAction(a.action);
+  say(a.text, {
+    source: a.source || (model ? "slm" : "intent"),
+    confidence: model?.confidence,
+    latencyMs,
+    action: a.action,
+    rawQuestion: q,
+  });
+}
+
+export { alterAnswer, clearMemory, getMemoryStats, toggleLearning };
 
 export function setVoice(on) {
   if (!on) stopSpeaking();
   set({ voiceOn: on, speaking: false });
+}
+
+export function setVoiceGender(gender) {
+  const g = applyVoiceGender(gender);
+  set({ voiceGender: g });
+  return g;
 }
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));

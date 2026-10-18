@@ -4,7 +4,7 @@ import { ArrowRight, DownloadSimple, SpeakerHigh, SpeakerSlash } from "@phosphor
 import Orb from "./Orb";
 import Typed from "./Typed";
 import { NAME } from "./intents";
-import { ask, kale, setVoice, startTour, useKale } from "./store";
+import { ask, kale, setVoice, setVoiceGender, startTour, useKale } from "./store";
 import { supported } from "./voice";
 import { useSnapToHero } from "./useSnapToHero";
 import { profile } from "../data";
@@ -37,7 +37,7 @@ const FACTS = [
 export default function Landing() {
   const wrap = useRef(null);
   const reduce = useReducedMotion();
-  const { voiceOn, log } = useKale();
+  const { voiceOn, voiceGender, log } = useKale();
   const [bootDone, setBootDone] = useState(false);
   const booted = bootDone || !!reduce;
   const [skip, setSkip] = useState(false);
@@ -108,6 +108,26 @@ export default function Landing() {
             <span className="text-[15px] font-semibold tracking-[-0.02em]">{profile.name}</span>
           </a>
           <div className="flex items-center gap-2">
+            {supported.tts && (
+              <button
+                onClick={() => setVoiceGender(voiceGender === "male" ? "female" : "male")}
+                title={`Switch AI voice (currently ${voiceGender === "male" ? "Male" : "Female (Default)"}). Click to switch.`}
+                aria-label={`Current AI assistant voice is ${voiceGender === "male" ? "Male" : "Female"}. Click to switch to ${voiceGender === "male" ? "Female" : "Male"}.`}
+                className="group flex h-10 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3.5 text-xs text-fg/90 backdrop-blur-md transition hover:border-white/30 hover:bg-white/[0.08] hover:text-fg active:scale-[0.98]"
+              >
+                <span
+                  className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                    voiceGender === "male"
+                      ? "bg-blue-glow shadow-[0_0_8px_#4dabf7]"
+                      : "bg-accent shadow-[0_0_8px_#ff6b6b]"
+                  }`}
+                />
+                <span className="text-muted group-hover:text-fg/80">Voice:</span>
+                <span className="font-semibold text-fg tracking-tight">
+                  {voiceGender === "male" ? "Male" : "Female"}
+                </span>
+              </button>
+            )}
             {supported.tts && (
               <button
                 onClick={() => setVoice(!kale.get().voiceOn)}
