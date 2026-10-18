@@ -8,6 +8,7 @@ Run: python slm/corpus.py && python slm/train.py
 """
 import json
 import math
+import os
 import random
 import struct
 import sys
@@ -17,6 +18,8 @@ from pathlib import Path
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+torch.set_num_threads(8)
 
 sys.path.insert(0, str(Path(__file__).parent))
 from corpus import normalise  # noqa: E402
@@ -127,7 +130,7 @@ for step in range(STEPS + 1):
     loss.backward()
     torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
     opt.step()
-    if step % 250 == 0:
+    if step % 100 == 0:
         print(f"step {step:5d}  loss {loss.item():.4f}  {time.time() - t0:.0f}s", flush=True)
 
 
@@ -149,11 +152,18 @@ answers = {r["a"] for r in rows}
 held_out = {
     "could you share omkar's resume": "download",
     "what was the pneumonia paper about": "scroll:#projects",
+    "who wrote the pneumonia paper with him": "scroll:#projects",
     "how does the student risk model work": "scroll:#projects",
+    "what are the critical weeks for student risk": "scroll:#projects",
     "what's trihub": "scroll:#lab",
+    "who uses trihub": "scroll:#lab",
+    "what is the student pipeline in trihub": "scroll:#lab",
     "what is he really skilled at": "scroll:#expertise",
+    "what are his xai skills": "scroll:#expertise",
+    "what is vok partners": "scroll:#systems",
     "how can i get in touch with him": "scroll:#contact",
     "where did omkar go to college": "scroll:#experience",
+    "tell me about his nmiet internship": "scroll:#experience",
     "what's the weather in pune": "",
     "who won the football world cup": "",
     "tell me about his speech project": "scroll:#projects",
@@ -162,6 +172,9 @@ held_out = {
     "what are his main skills": "scroll:#expertise",
     "is he open to internships": "scroll:#contact",
     "what stack is the erp built on": "scroll:#lab",
+    "who are you": "",
+    "how do you work": "",
+    "what are his key metrics": "scroll:#metrics",
     "write me a poem about rain": "",
 }
 ok = 0

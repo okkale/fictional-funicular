@@ -1,14 +1,16 @@
-// Shared Kyle state: chat log, voice, tour. One store so the landing greeter and the
+// Shared K.A.L.E. state: chat log, voice, tour. One store so the landing greeter and the
 // corner dock speak with the same voice and the same memory.
 import { useSyncExternalStore } from "react";
 import { profile } from "../data";
 import { answer, matchIntent, TOURS } from "./intents";
-import { speak, stopSpeaking, supported } from "./voice";
+import { speak, stopSpeaking, supported, getVoiceGender, setVoiceGender as applyVoiceGender } from "./voice";
 import { loadModel, pickAnswer, vet } from "./slm";
 import { glideTo, isGliding, sectionY, stopGlide } from "./glide";
+import { recordInteraction, findLearnedAnswer, alterAnswer, getMemoryStats, clearMemory, toggleLearning } from "./memory";
 
 let state = {
   voiceOn: supported.tts,
+  voiceGender: getVoiceGender(), // "female" by default
   speaking: false,
   listening: false,
   open: false,
@@ -46,10 +48,10 @@ export function runAction(action) {
 }
 
 // Say a line: log it and, if voice is on, speak it. Resolves when spoken.
-export function say(text) {
-  set({ log: [...state.log, { who: "ai", text }] });
+export function say(text, meta = null) {
+  set({ log: [...state.log, { who: "ai", text, meta }] });
   if (!state.voiceOn) return Promise.resolve();
-  return speak(text, { onStart: () => set({ speaking: true }), onEnd: () => set({ speaking: false }) });
+  return speak(text, { onStart: () => set({ speaking: true }), onEnd: () => set({ speaking: false }) }, state.voiceGender);
 }
 
 // Start fetching the model's weights (about 1.7 MB) before the first question needs them.
@@ -70,22 +72,54 @@ async function modelAnswer(q) {
 export async function ask(raw) {
   const q = raw.trim();
   if (!q) return;
+  recordInteraction("you", q);
   set({ log: [...state.log, { who: "you", text: q }], thinking: true });
+
+  // 1. Check self-learned memory & conversational context first
+  const learned = findLearnedAnswer(q);
+  if (learned) {
+    set({ thinking: false });
+    recordInteraction("ai", learned.text);
+    runAction(learned.action);
+    say(learned.text, { source: learned.source || "memory", rawQuestion: q });
+    return;
+  }
+
+  // 2. Query on-device SLM
   let model = null;
+  const t0 = performance.now();
   try {
     model = await modelAnswer(q);
   } catch {
     model = null;
   }
+  const latencyMs = Math.round(performance.now() - t0);
+
+  // 3. Match against intent rules with check
   const a = pickAnswer(model, matchIntent(q)) ?? answer(q);
   set({ thinking: false });
+  recordInteraction("ai", a.text);
   runAction(a.action);
-  say(a.text);
+  say(a.text, {
+    source: a.source || (model ? "slm" : "intent"),
+    confidence: model?.confidence,
+    latencyMs,
+    action: a.action,
+    rawQuestion: q,
+  });
 }
+
+export { alterAnswer, clearMemory, getMemoryStats, toggleLearning };
 
 export function setVoice(on) {
   if (!on) stopSpeaking();
   set({ voiceOn: on, speaking: false });
+}
+
+export function setVoiceGender(gender) {
+  const g = applyVoiceGender(gender);
+  set({ voiceGender: g });
+  return g;
 }
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -120,20 +154,16 @@ async function goStep(index) {
   await landed();
   if (token !== tourToken) return;
   const spoken = say(step.line);
-  // With voice on, the stop lasts as long as Kyle talks; muted, as long as the line takes to read.
-  const read = Math.min(14000, Math.max(3500, step.line.length * 55));
-  // Sections taller than the visible area get a slow pan to their end while Kyle talks,
+  // Sections taller than the visible area get a slow pan to their end while K.A.L.E. talks,
   // so every part of the section passes through view before the next stop.
   const pan = panFor(step.target, step.through);
-  const panMs = pan ? Math.max(2600, Math.min(read, pan.distance * 5 + 1200)) : 0;
+  const hold = Math.max(6500, step.line.length * 65, pan ? pan.distance * 7 + 2800 : 0);
   if (pan) {
-    await wait(900); // let the headline register first
+    await wait(1400); // let the headline register first
     if (token !== tourToken) return;
-    glideTo(pan.to, { ms: panMs, ease: "pan" });
+    glideTo(pan.to, { ms: hold - 2400, ease: "pan" });
   }
-  await Promise.all([state.voiceOn ? spoken : null, wait(state.voiceOn ? 1500 : read), wait(panMs)]);
-  if (token !== tourToken || !state.tour?.playing) return;
-  await wait(700); // a beat between stops, not a pause
+  await Promise.all([spoken, wait(pan ? hold - 1400 : hold)]);
   if (token !== tourToken || !state.tour?.playing) return;
   goStep(index + 1);
 }

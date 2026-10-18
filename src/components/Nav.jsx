@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence, useMotionValueEvent, useScroll } from "motion/react";
-import { List, X, DownloadSimple } from "@phosphor-icons/react";
+import { List, X, DownloadSimple, SpeakerHigh } from "@phosphor-icons/react";
 import { erpPipeline, profile } from "../data";
-import { useKale } from "../kale/store";
+import { useKale, setVoiceGender } from "../kale/store";
 import { EASE } from "./ui";
 
 const LINKS = [
@@ -29,7 +29,13 @@ export default function Nav() {
   const [hidden, setHidden] = useState(true); // revealed once the visitor leaves the Kyle landing
   const [scrolled, setScrolled] = useState(false);
   const { scrollY, scrollYProgress } = useScroll();
-  const { tour } = useKale(); // tours own the screen: keep the nav out of the way
+  const { tour, voiceGender } = useKale(); // tours own the screen: keep the nav out of the way
+
+  const isFemale = voiceGender !== "male"; // default to female
+
+  const toggleVoice = () => {
+    setVoiceGender(isFemale ? "male" : "female");
+  };
 
   useMotionValueEvent(scrollY, "change", (y) => {
     const prev = scrollY.getPrevious() ?? 0;
@@ -67,11 +73,31 @@ export default function Nav() {
               </li>
             ))}
           </ul>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
+            {/* AI Voice Switcher on Navbar: Female (default) / Male */}
+            <button
+              onClick={toggleVoice}
+              title={`Switch AI voice (currently ${isFemale ? "Female (Default)" : "Male"}). Click to switch to ${isFemale ? "Male" : "Female"}.`}
+              aria-label={`Current AI assistant voice is ${isFemale ? "Female" : "Male"}. Click to switch to ${isFemale ? "Male" : "Female"}.`}
+              className="group flex h-9 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3 text-xs text-fg/90 transition hover:border-white/30 hover:bg-white/[0.08] hover:text-fg active:scale-[0.98]"
+            >
+              <span
+                className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                  isFemale
+                    ? "bg-accent shadow-[0_0_8px_#ff6b6b]"
+                    : "bg-blue-glow shadow-[0_0_8px_#4dabf7]"
+                }`}
+              />
+              <span className="text-muted group-hover:text-fg/80">Voice:</span>
+              <span className="font-semibold text-fg tracking-tight">
+                {isFemale ? "Female" : "Male"}
+              </span>
+            </button>
+
             <a
               href={profile.resume}
               download
-              className="hidden h-10 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 text-sm text-fg/90 transition hover:border-white/25 hover:text-fg active:scale-[0.98] sm:flex"
+              className="hidden h-9 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 text-sm text-fg/90 transition hover:border-white/25 hover:text-fg active:scale-[0.98] sm:flex"
             >
               <DownloadSimple size={16} /> Résumé
             </a>
@@ -96,15 +122,49 @@ export default function Nav() {
                 <X size={20} />
               </button>
             </div>
-            <ul className="mt-12 space-y-1">
+            <ul className="mt-8 space-y-1">
               {[...LINKS, ["Résumé", profile.resume]].map(([label, href], i) => (
                 <motion.li key={href} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i, ease: EASE, duration: 0.6 }}>
-                  <a href={href} onClick={() => setOpen(false)} className="display block py-2 text-6xl">
+                  <a href={href} onClick={() => setOpen(false)} className="display block py-2 text-5xl">
                     {label}
                   </a>
                 </motion.li>
               ))}
             </ul>
+
+            {/* Mobile Drawer Voice Switcher */}
+            <div className="mt-auto mb-6 rounded-2xl border border-white/10 bg-surface/80 p-4 backdrop-blur-md">
+              <div className="flex items-center justify-between pb-3">
+                <span className="text-xs uppercase tracking-wider text-muted font-semibold">AI Assistant Voice (Tour & Chatbot)</span>
+                <span className="text-xs font-medium text-fg/80">{isFemale ? "Female (Default)" : "Male"}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setVoiceGender("female")}
+                  className={`flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold transition ${
+                    isFemale
+                      ? "border border-accent/50 bg-accent/15 text-accent shadow-sm"
+                      : "border border-white/10 bg-white/[0.03] text-muted hover:text-fg"
+                  }`}
+                >
+                  <span className="h-2 w-2 rounded-full bg-accent" />
+                  Female (Default)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setVoiceGender("male")}
+                  className={`flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold transition ${
+                    !isFemale
+                      ? "border border-blue-glow/50 bg-blue-glow/15 text-blue-glow shadow-sm"
+                      : "border border-white/10 bg-white/[0.03] text-muted hover:text-fg"
+                  }`}
+                >
+                  <span className="h-2 w-2 rounded-full bg-blue-glow" />
+                  Male
+                </button>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

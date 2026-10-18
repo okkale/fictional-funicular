@@ -54,5 +54,13 @@
 "Sure. The tour buttons are right at the top, on the landing screen. Taking you there.": "2fb1d370177d.mp3",
 "Anytime! Anything else you want to know about Omkar?": "dfb7d7a2c89a.mp3",
 "Bye! Hope to see you in Omkar's inbox soon.": "67d912916857.mp3",
-"Hmm, that one I can't help with, I only know about Omkar's work. Try asking about his research, projects, the ERP, his skills, or how to hire him.": "d746778a0eec.mp3"
+"Hmm, that one I can't help with, I only know about Omkar's work. Try asking about his research, projects, the ERP, his skills, or how to hire him.": "d746778a0eec.mp3",
+"Because he does both sides. Published research in explainable deep learning, and production engineering in NestJS and React. He knows what a model is doing, and he knows how to deploy it inside real software.": "572651d4fe4f.mp3",
+"He organised a national-level hackathon, served as Joint Cultural Secretary at NMIET, and ran clubs and tech initiatives across campus.": "7f7fb3a0ddf2.mp3",
+"I'm Kyle, Knowledge Assistant for Learning and Engineering. I'm an on-device character-level transformer with about 0.8M parameters, running 100% locally in your browser with zero server calls.": "c7217fbfe9e8.mp3",
+"Omkar is open to ML, applied AI and agent engineering roles, and internships also. You can email him at ${profile.email}.": "38ac469e3839.mp3",
+"That's his published paper, ${xaiPaper.title}, and Omkar is the first author. He compared Grad-CAM, LIME and SHAP to see which explanation is fast and faithful enough for a clinic. Let me open it in Projects.": "00b7766facd9.mp3",
+"The academic risk model trained on OULAD data across 32,000+ students. The attention weights showed weeks 6 to 8 are the critical window to flag at-risk students.": "c0b71acc3d3b.mp3",
+"The highlights: one published paper as first author, four AI projects, 94.6% accuracy on academic risk, 3000+ student records in CRM, and a live ERP.": "a49d85dc9943.mp3",
+"The pneumonia paper was authored by Omkar Kale as first author, alongside S. Salunke, S. Shinde, P. Thomake, P. Patil and R. Patil.": "0674d78e2f16.mp3"
 }

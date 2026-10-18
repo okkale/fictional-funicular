@@ -320,3 +320,13 @@ html.lite .bg-chrome\/80,
 html.lite .bg-chrome\/85 {
   background-color: rgb(5 8 18 / 0.94);
 }
+
+/* Hide scrollbars while preserving scrolling functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

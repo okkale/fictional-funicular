@@ -89,6 +89,33 @@ const INTENTS = [
     }),
   },
   {
+    test: /author|coauthor|co-author|who wrote/,
+    run: () => ({
+      text: "The pneumonia paper was authored by Omkar Kale as first author, alongside S. Salunke, S. Shinde, P. Thomake, P. Patil and R. Patil.",
+      action: { type: "scroll", target: "#projects" },
+    }),
+  },
+  {
+    test: /oulad|peak week|critical week|weeks 6 to 8/,
+    run: () => ({
+      text: "The academic risk model trained on OULAD data across 32,000+ students. The attention weights showed weeks 6 to 8 are the critical window to flag at-risk students.",
+      action: { type: "scroll", target: "#projects" },
+    }),
+  },
+  {
+    test: /\b(who are you|what is kyle|what model|how do you work|slm architecture)\b/,
+    run: () => ({
+      text: `I'm ${NAME}, Knowledge Assistant for Learning and Engineering. I'm an on-device character-level transformer with about 0.8M parameters, running 100% locally in your browser with zero server calls.`,
+    }),
+  },
+  {
+    test: /\b(metric|number|highlight|achievement)s?\b/,
+    run: () => ({
+      text: "The highlights: one published paper as first author, four AI projects, 94.6% accuracy on academic risk, 3000+ student records in CRM, and a live ERP.",
+      action: { type: "scroll", target: "#metrics" },
+    }),
+  },
+  {
     test: /help|what can you|command/,
     run: () => ({ text: "You can ask me things like: show research, the pneumonia paper, projects, open the ERP, skills, download résumé, or how do I hire him. Or start a tour." }),
   },
