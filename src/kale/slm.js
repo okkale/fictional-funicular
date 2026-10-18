@@ -129,11 +129,7 @@ export function createModel(cfg, buffer) {
 export const normalise = (q) => q.toLowerCase().replace(/’/g, "'").split(/\s+/).filter(Boolean).join(" ");
 
 // Facts the model may state as numbers. Anything else means it blended answers: reject.
-<<<<<<< HEAD
 const NUMBERS = new Set(["94.6%", "94.6", "0.93", "32,000+", "32,000", "3000+", "3000", "40%", "5+", "6", "8", "2023", "2025", "2026", "2027", "0.8M", "1", "4", "5"]);
-=======
-const NUMBERS = new Set(["94.6%", "94.6", "0.93", "32,000+", "32,000", "3000+", "3000", "40%", "5+", "6", "8", "2023", "2025", "2026", "2027"]);
->>>>>>> origin/kale-voice-slm
 const BANNED = /93%|0\.96|21,?293|two (published )?papers|co-authored paper/i;
 export const MIN_CONFIDENCE = 0.9;
 
@@ -141,7 +137,6 @@ export const MIN_CONFIDENCE = 0.9;
 export function vet({ text, action, confidence }) {
   if (confidence < MIN_CONFIDENCE || text.length < 8 || BANNED.test(text)) return null;
   for (const num of text.match(/(?<![\w.])\d[\d,.]*[%+]?/g) || []) if (!NUMBERS.has(num.replace(/[.,]$/, ""))) return null;
-<<<<<<< HEAD
   const meta = { confidence, source: "slm" };
   if (!action) return { text, ...meta };
   if (action === "download") return { text, action: { type: "download" }, ...meta };
@@ -149,14 +144,6 @@ export function vet({ text, action, confidence }) {
   if (action === "open:linkedin") return { text, action: { type: "open", target: profile.linkedin }, ...meta };
   const target = action.startsWith("scroll:") && action.slice(7);
   if (target && SECTIONS.includes(target)) return { text, action: { type: "scroll", target }, ...meta };
-=======
-  if (!action) return { text };
-  if (action === "download") return { text, action: { type: "download" } };
-  if (action === "open:github") return { text, action: { type: "open", target: profile.github } };
-  if (action === "open:linkedin") return { text, action: { type: "open", target: profile.linkedin } };
-  const target = action.startsWith("scroll:") && action.slice(7);
-  if (target && SECTIONS.includes(target)) return { text, action: { type: "scroll", target } };
->>>>>>> origin/kale-voice-slm
   return null;
 }
 
@@ -168,15 +155,9 @@ export const isDecline = (a) => /can't help with/.test(a?.text ?? "");
 // when both point somewhere and disagree, the rule wins; the model keeps the answers rules can't
 // give (details, small talk, declining off-topic questions) and its own wording when they agree.
 export function pickAnswer(model, rule) {
-<<<<<<< HEAD
   if (!model) return rule ? { ...rule, source: "intent" } : null;
   if (isDecline(model)) return rule ? { ...rule, source: "intent" } : model;
   if (rule && model.action && where(model) !== where(rule)) return { ...rule, source: "intent" };
-=======
-  if (!model) return rule;
-  if (isDecline(model)) return rule ?? model;
-  if (rule && model.action && where(model) !== where(rule)) return rule;
->>>>>>> origin/kale-voice-slm
   return model;
 }
 

@@ -16,11 +16,6 @@ import {
 } from "@phosphor-icons/react";
 import Orb from "./Orb";
 import Typed from "./Typed";
-<<<<<<< Updated upstream
-import { NAME, SUGGEST } from "./intents";
-<<<<<<< HEAD
-import { ask, kale, setVoice, useKale } from "./store";
-=======
 import { NAME } from "./intents";
 import {
   ask,
@@ -35,20 +30,10 @@ import {
   toggleLearning,
 } from "./store";
 import { subscribeMemory } from "./memory";
->>>>>>> Stashed changes
-=======
-import { ask, kale, setVoice, useKale, warmModel } from "./store";
->>>>>>> origin/kale-voice-slm
 import TourBar from "./TourBar";
 import { listen, supported } from "./voice";
 import { EASE } from "../components/ui";
 
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-/* Corner dock: K.A.L.E. shrinks here once the visitor leaves the landing HUD. Ctrl/⌘ K toggles. */
-export default function Kale() {
-  const { open, log, voiceOn, speaking, listening, tour } = useKale();
-=======
 const REAL_WORLD_SUGGESTIONS = [
   "Who wrote the pneumonia paper?",
   "TriHub ERP stack & roles",
@@ -77,12 +62,6 @@ const AVAILABLE_ACTIONS = [
 /* Corner dock: Kyle shrinks here once the visitor leaves the landing HUD. Ctrl/⌘ K toggles. */
 export default function Kale() {
   const { open, log, voiceOn, voiceGender, speaking, listening, tour, slm, thinking } = useKale();
->>>>>>> Stashed changes
-=======
-/* Corner dock: Kyle shrinks here once the visitor leaves the landing HUD. Ctrl/⌘ K toggles. */
-export default function Kale() {
-  const { open, log, voiceOn, speaking, listening, tour, slm, thinking } = useKale();
->>>>>>> origin/kale-voice-slm
   const [shown, setShown] = useState(false);
   const [input, setInput] = useState("");
   const [inspectorOpen, setInspectorOpen] = useState(false);
@@ -134,10 +113,7 @@ export default function Kale() {
         ],
       });
     }
-    if (open) {
-      warmModel();
-      setTimeout(() => inputRef.current?.focus(), 250);
-    }
+    if (open) setTimeout(() => inputRef.current?.focus(), 250);
   }, [open]);
 
   useEffect(() => {
@@ -255,24 +231,6 @@ export default function Kale() {
   };
 
   const tint = listening ? "listening" : speaking ? "speaking" : "idle";
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-  const busy = thinking || speaking || listening;
-  const status = listening
-    ? "Listening…"
-    : thinking
-      ? "Thinking…"
-      : speaking
-        ? "Speaking…"
-        : slm === "ready"
-          ? "Online · on-device model"
-          : slm === "loading"
-            ? "Loading on-device model…"
-            : "Online · keyword mode";
->>>>>>> origin/kale-voice-slm
-  const visible = (shown || open) && !tour; // the tour bar carries its own controls
-=======
   const busy = thinking || speaking || listening;
   const status = listening
     ? "Listening…"
@@ -282,7 +240,6 @@ export default function Kale() {
         ? "Speaking…"
         : "Online";
   const visible = (shown || open) && !tour;
->>>>>>> Stashed changes
   const lastAi = [...log].reverse().find((m) => m.who === "ai");
   const subtitle = !open && !tour && speaking && lastAi;
 
@@ -290,7 +247,7 @@ export default function Kale() {
     <>
       <AnimatePresence>{tour && <TourBar key="tour" />}</AnimatePresence>
 
-      {/* Subtitles: what Kyle is saying while the chat is closed. */}
+      {/* Subtitles: what K.A.L.E. is saying while the chat is closed. */}
       <AnimatePresence mode="wait">
         {subtitle && (
           <motion.p
@@ -300,7 +257,7 @@ export default function Kale() {
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.4, ease: EASE }}
             aria-live="polite"
-            className="hud-panel fixed bottom-[calc(6rem+env(safe-area-inset-bottom,0px))] right-4 z-50 w-[min(380px,calc(100vw-2rem))] bg-chrome/85 px-4 py-3 font-mono text-[13px] leading-relaxed text-fg"
+            className="hud-panel fixed bottom-24 right-4 z-50 w-[min(380px,calc(100vw-2rem))] bg-chrome/85 px-4 py-3 font-mono text-[13px] leading-relaxed text-fg"
           >
             <span className="hud-text mr-2">&gt;</span>
             <Typed text={lastAi.text} speed={18} />
@@ -315,7 +272,7 @@ export default function Kale() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.6, y: 20 }}
             transition={{ duration: 0.5, ease: EASE }}
-            className="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] right-5 z-50 flex items-center gap-2"
+            className="fixed bottom-5 right-5 z-50 flex items-center gap-2"
           >
             <button
               onClick={() => setOpen((o) => !o)}
@@ -346,26 +303,6 @@ export default function Kale() {
             animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
             exit={{ opacity: 0, y: 16, scale: 0.97, filter: "blur(6px)" }}
             transition={{ duration: 0.45, ease: EASE }}
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-            className="hud-panel fixed bottom-24 right-4 z-50 flex max-h-[min(620px,calc(100dvh-8rem))] w-[min(420px,calc(100vw-2rem))] origin-bottom-right flex-col overflow-hidden bg-chrome/90 shadow-[0_30px_120px_-20px_rgba(0,0,0,0.8)]"
-=======
-            className="hud-panel fixed bottom-[calc(6rem+env(safe-area-inset-bottom,0px))] right-4 z-50 flex max-h-[min(620px,calc(100dvh-8rem))] w-[min(420px,calc(100vw-2rem))] origin-bottom-right flex-col overflow-hidden bg-chrome/90 shadow-[0_30px_120px_-20px_rgba(0,0,0,0.8)]"
->>>>>>> origin/kale-voice-slm
-          >
-            <div className="flex items-center gap-3 border-b border-[rgba(255,182,72,0.15)] px-4 py-3">
-              <span className="relative block h-11 w-11 shrink-0 rounded-full border border-[rgba(255,182,72,0.35)] bg-ink/60">
-                <Orb compact tint={tint} />
-                <span
-                  aria-hidden="true"
-                  className={`absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-chrome ${busy ? "bg-accent" : slm === "ready" ? "bg-hud" : "animate-pulse bg-muted"}`}
-                />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="hud-text font-mono text-sm tracking-[0.2em]">{NAME}</p>
-<<<<<<< HEAD
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">Knowledge Assistant for Learning & Engineering</p>
-=======
             className="hud-panel fixed bottom-[calc(6rem+env(safe-area-inset-bottom,0px))] right-4 z-50 flex max-h-[min(640px,calc(100dvh-7.5rem))] w-[min(450px,calc(100vw-1.5rem))] origin-bottom-right flex-col overflow-hidden bg-chrome/95 shadow-[0_30px_120px_-20px_rgba(0,0,0,0.85)] border border-[rgba(255,182,72,0.25)] overscroll-contain"
           >
             {/* Top Bar */}
@@ -382,10 +319,6 @@ export default function Kale() {
                 <p className="truncate font-mono text-[11px] text-muted" aria-live="polite">
                   {status}
                 </p>
->>>>>>> Stashed changes
-=======
-                <p className="truncate font-mono text-[11px] text-muted" aria-live="polite">{status}</p>
->>>>>>> origin/kale-voice-slm
               </div>
               <div className="flex items-center gap-1">
                 {/* SLM Inspector & Memory Studio toggle */}
@@ -431,10 +364,6 @@ export default function Kale() {
               </div>
             </div>
 
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-            <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-5 py-4" aria-live="polite">
-=======
             {/* Inspector / Self-Learning HUD Bar */}
             <AnimatePresence>
               {inspectorOpen && (
@@ -517,10 +446,6 @@ export default function Kale() {
               className="no-scrollbar flex-1 space-y-3 overflow-y-auto overscroll-contain px-4 py-3.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
               aria-live="polite"
             >
->>>>>>> Stashed changes
-=======
-            <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto overscroll-contain px-5 py-4" aria-live="polite">
->>>>>>> origin/kale-voice-slm
               {log.map((m, i) => (
                 <motion.div
                   key={i}
@@ -635,18 +560,11 @@ export default function Kale() {
                   )}
                 </motion.div>
               ))}
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
               {thinking && (
                 <p className="font-mono text-[13px] text-muted">
                   <span className="hud-text mr-2">&gt;</span>thinking…
                 </p>
               )}
->>>>>>> Stashed changes
-=======
-              {thinking && <p className="font-mono text-[13px] text-muted"><span className="hud-text mr-2">&gt;</span>thinking…</p>}
->>>>>>> origin/kale-voice-slm
             </div>
 
             {/* Quick Suggestion Chips */}
