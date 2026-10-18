@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { animate, useInView, useMotionValue, useMotionValueEvent, useReducedMotion } from "motion/react";
+import { animate, useInView, useMotionValue, useMotionValueEvent } from "motion/react";
+import { useReducedMotion } from "../perf";
 import { themeColors } from "../colors";
 
 // Dissolve block mix, as theme slots: mostly background, some accent, a little text and shadow.

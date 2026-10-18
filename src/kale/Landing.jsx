@@ -1,7 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
+import { useReducedMotion } from "../perf";
 import { ArrowRight, DownloadSimple, SpeakerHigh, SpeakerSlash } from "@phosphor-icons/react";
-import Orb from "./Orb";
 import Typed from "./Typed";
 import { NAME } from "./intents";
 import { ask, kale, setVoice, setVoiceGender, startTour, useKale } from "./store";
@@ -12,9 +12,12 @@ import { EASE } from "../components/ui";
 import { Monogram } from "../components/Nav";
 
 const Sphere = lazy(() => import("./Sphere"));
+// No WebGL (hardware acceleration off): the same sphere, drawn with canvas 2D. `?2d` forces it.
+const Sphere2D = lazy(() => import("./Sphere2D"));
+const hasWebgl = () => typeof window === "undefined" || !new URLSearchParams(window.location.search).has("2d");
 
 /*
-  Page 1: K.A.L.E. The holographic sphere fills the screen; the UI is three things only:
+  Page 1: Kyle The holographic sphere fills the screen; the UI is three things only:
   who this is, three ways in, and a box to ask a question. One scroll glides to page 2 while the
   camera flies into the sphere (useSnapToHero + the section's scroll progress).
 */
@@ -41,7 +44,7 @@ export default function Landing() {
   const [bootDone, setBootDone] = useState(false);
   const booted = bootDone || !!reduce;
   const [skip, setSkip] = useState(false);
-  const [webgl, setWebgl] = useState(true);
+  const [webgl, setWebgl] = useState(hasWebgl);
   const [q, setQ] = useState("");
   const [asked, setAsked] = useState(false);
   const onFail = useCallback(() => setWebgl(false), []);
@@ -81,17 +84,13 @@ export default function Landing() {
     <section id="top" ref={wrap} className="relative h-[100dvh] overflow-hidden bg-bg" aria-label={`${NAME}, Omkar's portfolio assistant`}>
       {/* Sphere: fixed and in front during the hand-off; the UI below sits above it */}
       <motion.div style={{ opacity: stageOpacity, visibility: stageVisibility }} className="pointer-events-none fixed inset-0 z-30 bg-bg">
-        {webgl ? (
-          <Suspense fallback={null}>
+        <Suspense fallback={null}>
+          {webgl ? (
             <Sphere key={skip ? "skip" : "boot"} progress={reduce ? null : p} boot={!skip} bootMs={BOOT_MS} reduce={!!reduce} onFail={onFail} className="h-full w-full" />
-          </Suspense>
-        ) : (
-          <div className="grid h-full place-items-center">
-            <div className="w-[min(80vw,60vh)]">
-              <Orb boot={!skip} bootMs={BOOT_MS} />
-            </div>
-          </div>
-        )}
+          ) : (
+            <Sphere2D key={skip ? "skip" : "boot"} progress={reduce ? null : p} boot={!skip} bootMs={BOOT_MS} reduce={!!reduce} className="h-full w-full" />
+          )}
+        </Suspense>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_70%_at_50%_40%,transparent_45%,rgba(3,3,6,0.9)_100%)]" aria-hidden />
         {/* The page-2 room light already falls here, blue from the left and red from the right, so the
             gold sphere sits in the same space the portrait does. Kept to the edges, off the sphere. */}
@@ -131,7 +130,7 @@ export default function Landing() {
             {supported.tts && (
               <button
                 onClick={() => setVoice(!kale.get().voiceOn)}
-                aria-label={voiceOn ? "Mute K.A.L.E. voice" : "Turn on K.A.L.E. voice"}
+                aria-label={voiceOn ? `Mute ${NAME} voice` : `Turn on ${NAME} voice`}
                 aria-pressed={voiceOn}
                 className="grid h-10 w-10 place-items-center rounded-full border border-white/15 bg-white/[0.04] text-fg/80 backdrop-blur-md transition hover:border-white/25 hover:text-fg active:scale-95"
               >
@@ -160,9 +159,11 @@ export default function Landing() {
               Omkar Kale<span className="text-accent">.</span>
             </motion.h1>
             <motion.p {...enter(0.2)} className="on-glow mt-3 max-w-[52ch] text-base leading-relaxed text-fg md:text-lg [@media(max-height:560px)]:hidden">
-              Final-year AI engineering student in Pune. I publish explainable deep learning research and ship AI agents inside real software.
+              {/* Phones: one short line; the rest of the story is a scroll away. */}
+              <span className="md:hidden">AI engineering student. Explainable deep learning research, AI agents in real software.</span>
+              <span className="hidden md:inline">Final-year AI engineering student in Pune. I publish explainable deep learning research and ship AI agents inside real software.</span>
             </motion.p>
-            <motion.ul {...enter(0.26)} className="mt-5 grid max-w-[560px] grid-cols-3 gap-px overflow-hidden rounded-[14px] border border-white/15 bg-white/10 [@media(max-height:640px)]:hidden" aria-label="Highlights">
+            <motion.ul {...enter(0.26)} className="mt-5 hidden max-w-[560px] grid-cols-3 gap-px overflow-hidden rounded-[14px] border border-white/15 bg-white/10 md:grid [@media(max-height:640px)]:hidden" aria-label="Highlights">
               {FACTS.map(([value, label]) => (
                 <li key={label} className="bg-chrome/85 px-3 py-2.5 backdrop-blur-md md:px-4">
                   <p className="display text-2xl text-fg md:text-3xl">{value}</p>
@@ -176,7 +177,7 @@ export default function Landing() {
                 <button
                   key={id}
                   onClick={() => startTour(id)}
-                  className={`group flex h-12 items-center gap-2 rounded-full px-5 text-[15px] font-medium transition active:scale-[0.97] ${
+                  className={`group flex h-11 items-center gap-2 rounded-full px-4 text-sm font-medium transition active:scale-[0.97] md:h-12 md:px-5 md:text-[15px] ${
                     i === 0
                       ? "bg-fg text-ink hover:bg-white"
                       : "border border-white/15 bg-white/[0.04] text-fg backdrop-blur-md hover:border-white/30 hover:bg-white/[0.08]"
@@ -196,7 +197,7 @@ export default function Landing() {
               e.preventDefault();
               submit(q);
             }}
-            className="w-full rounded-[20px] border border-white/15 bg-chrome/70 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl md:p-5 [@media(max-height:640px)]:hidden"
+            className="hidden w-full rounded-[20px] border border-white/15 bg-chrome/70 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl md:block md:p-5 [@media(max-height:640px)]:hidden"
           >
             <label htmlFor="landing-ask" className="text-sm font-medium text-fg/90">
               Ask {NAME} anything

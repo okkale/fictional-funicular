@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
-import { ArrowUpRight, Copy, Check, GithubLogo, LinkedinLogo, Robot, Lightning, Browser, TreeStructure, Graph } from "@phosphor-icons/react";
+import { motion } from "motion/react";
+import { useReducedMotion } from "../perf";
+import { ArrowUp, ArrowUpRight, Copy, Check, EnvelopeSimple, GithubLogo, LinkedinLogo, Robot, Lightning, Browser, TreeStructure, Graph } from "@phosphor-icons/react";
+import { glideTo } from "../kale/glide";
+import { runAction } from "../kale/store";
 import { experience, logos, metrics, profile, systems } from "../data";
 import { CountUp, EASE, Eyebrow, Magnetic, Reveal, SectionTitle, Tilt, useSpotlight } from "./ui";
 import { Monogram } from "./Nav";
@@ -35,13 +38,22 @@ export function Metrics() {
   );
 }
 
-/* Systems bento: 5 items, 5 cells. TriHub ERP is the live, featured one. */
+/* Systems bento: 5 items, 5 cells. TriHub ERP is the live, featured one. Every card shares one
+   navy-to-wine glass so the grid reads as a set; the featured card is only a step brighter, and
+   each card carries its own soft glow (blue or red) in a corner. */
 const ICONS = [TreeStructure, Robot, Graph, Lightning, Browser];
+const GLOWS = [
+  "radial-gradient(60% 70% at 100% 0%, rgba(59,139,255,0.35), transparent 70%)",
+  "radial-gradient(60% 70% at 0% 100%, rgba(255,59,59,0.22), transparent 70%)",
+  "radial-gradient(70% 80% at 100% 100%, rgba(59,139,255,0.24), transparent 70%)",
+  "radial-gradient(70% 80% at 0% 0%, rgba(255,59,59,0.2), transparent 70%)",
+  "radial-gradient(60% 70% at 100% 0%, rgba(59,139,255,0.26), transparent 70%)",
+];
 export function Systems() {
   const spot = useSpotlight();
   const span = { lg: "md:col-span-4 md:row-span-2", md: "md:col-span-2 md:row-span-2", sm: "md:col-span-2" };
   return (
-    <section id="systems" className="relative px-4 py-28 md:px-8">
+    <section id="systems" className="relative px-4 py-20 md:px-8 md:py-28">
       <div className="mx-auto max-w-[1400px]">
         <Reveal>
           <Eyebrow>IN PRODUCTION</Eyebrow>
@@ -50,7 +62,7 @@ export function Systems() {
             <br className="hidden md:block" /> <span className="text-muted">used by real people.</span>
           </SectionTitle>
         </Reveal>
-        <div className="mt-14 grid auto-rows-[minmax(200px,auto)] gap-4 md:grid-cols-6">
+        <div className="mt-10 grid auto-rows-[minmax(170px,auto)] gap-3 md:mt-14 md:auto-rows-[minmax(200px,auto)] md:grid-cols-6 md:gap-4">
           {systems.map((s, idx) => {
             const Icon = ICONS[idx];
             const featured = idx === 0;
@@ -61,27 +73,30 @@ export function Systems() {
                 <Tag
                   {...(s.href ? { href: s.href, target: "_blank", rel: "noreferrer" } : {})}
                   onMouseMove={spot}
-                  className={`spotlight group relative flex h-full flex-col overflow-hidden rounded-[20px] border border-line p-7 backdrop-blur-md transition-transform duration-500 ease-out-expo hover:-translate-y-1 ${
-                    featured ? "border-blue/60 bg-[linear-gradient(140deg,#0252ac,#092659_55%,#591e28)] text-fg" : "glass"
+                  className={`spotlight group relative flex h-full flex-col overflow-hidden rounded-[20px] border p-6 transition-transform duration-500 ease-out-expo hover:-translate-y-1 md:p-7 ${
+                    featured
+                      ? "border-blue-glow/45 bg-[linear-gradient(150deg,rgba(2,82,172,0.42),rgba(9,38,89,0.55)_55%,rgba(89,30,40,0.45))]"
+                      : "border-white/10 bg-[linear-gradient(150deg,rgba(2,82,172,0.14),rgba(9,38,89,0.3)_55%,rgba(89,30,40,0.16))]"
                   }`}
                 >
+                  <div className="pointer-events-none absolute inset-0" style={{ background: GLOWS[idx] }} aria-hidden />
                   {featured && (
-                    <div className="pointer-events-none absolute -bottom-16 -right-6 select-none text-[13rem] font-bold leading-none tracking-[-0.08em] opacity-[0.1] md:text-[17rem]" aria-hidden>
+                    <div className="pointer-events-none absolute -bottom-12 -right-4 select-none text-[9rem] font-bold leading-none tracking-[-0.08em] opacity-[0.08] md:-bottom-16 md:-right-6 md:text-[17rem]" aria-hidden>
                       ERP
                     </div>
                   )}
-                  <div className="flex items-center justify-between">
-                    <span className={`grid h-11 w-11 place-items-center rounded-[10px] ${featured ? "bg-white/10 text-fg" : "bg-surface-2 text-fg"}`}>
+                  <div className="relative flex items-center justify-between">
+                    <span className={`grid h-11 w-11 place-items-center rounded-[10px] border ${featured ? "border-blue-glow/40 bg-blue/30 text-fg" : "border-white/10 bg-white/[0.06] text-fg"}`}>
                       <Icon size={22} />
                     </span>
-                    <span className={`flex items-center gap-2 rounded-full px-3 py-1 font-mono text-xs ${featured ? "bg-black/40 text-fg" : "border border-line text-muted"}`}>
+                    <span className={`flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-xs ${featured ? "border-white/15 bg-black/40 text-fg" : "border-white/10 bg-black/20 text-muted"}`}>
                       {featured && <span className="live-dot h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />}
                       {s.tag}
                     </span>
                   </div>
-                  <div className="mt-auto pt-12">
-                    <h3 className={`font-semibold tracking-[-0.035em] ${featured ? "display text-6xl md:text-8xl" : "text-2xl"}`}>{s.title}</h3>
-                    <p className={`mt-3 max-w-[46ch] leading-relaxed ${featured ? "text-lg text-fg/80" : "text-muted"}`}>{s.body}</p>
+                  <div className="relative mt-auto pt-10 md:pt-12">
+                    <h3 className={`font-semibold tracking-[-0.035em] ${featured ? "display text-5xl md:text-8xl" : "text-xl md:text-2xl"}`}>{s.title}</h3>
+                    <p className={`mt-3 max-w-[46ch] leading-relaxed ${featured ? "text-fg/80 md:text-lg" : "text-[15px] text-muted md:text-base"}`}>{s.body}</p>
                     {s.href && (
                       <span className="mt-6 inline-flex items-center gap-2 rounded-full bg-fg px-5 py-2.5 text-sm font-medium text-ink transition-all group-hover:gap-3">
                         Open live app <ArrowUpRight size={14} weight="bold" />
@@ -163,13 +178,90 @@ export function Stack() {
         <div className="marquee-track flex w-max items-center gap-16 pr-16">
           {row.map(([slug, name], i) => (
             <div key={i} className="flex items-center gap-3" title={name}>
-              <span className="logo-glyph block h-8 w-8" style={{ "--src": `url(https://cdn.simpleicons.org/${slug})` }} role="img" aria-label={name} />
+              <span className="logo-glyph block h-8 w-8" style={{ "--src": `url(/logos/${slug}.svg)` }} role="img" aria-label={name} />
               <span className="font-mono text-sm text-muted">{name}</span>
             </div>
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+/* Footer: who this is, where to reach him, where to go on the page. The résumé lives in the nav
+   and on the landing, so it isn't repeated here. */
+const CONNECT = [
+  [profile.linkedin, LinkedinLogo, "LinkedIn", "omkar-kale"],
+  [profile.github, GithubLogo, "GitHub", "okkale"],
+  [`mailto:${profile.email}`, EnvelopeSimple, "Email", profile.email],
+];
+const EXPLORE = [
+  ["#projects", "Projects"],
+  ["#expertise", "Skills"],
+  ["#lab", "TriHub ERP"],
+  ["#experience", "Experience"],
+];
+function Footer() {
+  return (
+    <footer className="mt-24 border-t border-line pt-10 md:mt-32">
+      <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_0.8fr]">
+        <div className="sm:col-span-2 lg:col-span-1">
+          <div className="flex items-center gap-3">
+            <Monogram className="h-9 w-9 text-[13px]" />
+            <span className="text-[15px] font-semibold tracking-[-0.02em]">{profile.name}</span>
+          </div>
+          <p className="mt-4 max-w-[38ch] text-sm leading-relaxed text-muted">
+            AI engineering student in Pune. Explainable deep learning research, and AI agents inside software people use.
+          </p>
+          <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-xs text-muted">
+            <span className="live-dot h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+            Open to ML / AI roles and internships
+          </p>
+        </div>
+        <nav aria-label="Connect">
+          <p className="font-mono text-xs tracking-[0.12em] text-muted">CONNECT</p>
+          <ul className="mt-3 divide-y divide-line border-y border-line">
+            {CONNECT.map(([href, Icon, label, handle]) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  {...(href.startsWith("http") ? { target: "_blank", rel: "me noreferrer" } : {})} /* rel="me": these profiles are the same person as this site */
+                  className="group flex items-center gap-3 py-3 text-sm text-fg/90 transition-colors hover:text-fg"
+                >
+                  <Icon size={18} className="shrink-0 text-muted transition-colors group-hover:text-hud" />
+                  <span>{label}</span>
+                  <span className="ml-auto min-w-0 truncate font-mono text-xs text-muted">{handle}</span>
+                  <ArrowUpRight size={13} className="shrink-0 text-muted transition-transform group-hover:-translate-y-px group-hover:translate-x-px" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <nav aria-label="Explore">
+          <p className="font-mono text-xs tracking-[0.12em] text-muted">EXPLORE</p>
+          <ul className="mt-3 space-y-0.5">
+            {EXPLORE.map(([target, label]) => (
+              <li key={target}>
+                <a
+                  href={target}
+                  onClick={(e) => (e.preventDefault(), runAction({ type: "scroll", target }))}
+                  className="block py-2 text-sm text-fg/80 transition-colors hover:text-fg"
+                >
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+      {/* Phones: extra room at the bottom so the Kyle button never sits on "Back to top" */}
+      <div className="mt-10 flex items-center justify-between gap-4 border-t border-line pb-24 pt-6 text-xs text-muted md:pb-6">
+        <span>© {new Date().getFullYear()} {profile.name}</span>
+        <button onClick={() => glideTo(0)} className="group inline-flex h-10 items-center gap-2 rounded-full border border-line px-4 transition-colors hover:border-white/25 hover:text-fg">
+          Back to top <ArrowUp size={13} className="transition-transform group-hover:-translate-y-0.5" />
+        </button>
+      </div>
+    </footer>
   );
 }
 
@@ -186,7 +278,7 @@ export function Contact() {
     }
   };
   return (
-    <section id="contact" className="relative overflow-hidden px-4 pb-10 pt-40 md:px-8">
+    <section id="contact" className="relative overflow-hidden px-4 pb-[env(safe-area-inset-bottom,0px)] pt-24 md:px-8 md:pt-40">
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-[radial-gradient(50%_60%_at_25%_100%,rgba(2,82,172,0.26),transparent_70%),radial-gradient(45%_55%_at_80%_100%,rgba(211,24,22,0.2),transparent_70%)]" aria-hidden />
       <div className="relative mx-auto max-w-[1400px]">
         <Reveal>
@@ -196,7 +288,7 @@ export function Contact() {
             <span className="text-accent">.</span>
           </h2>
         </Reveal>
-        <Reveal delay={0.15} className="mt-10 grid gap-10 md:grid-cols-[1fr_auto] md:items-end">
+        <Reveal delay={0.15} className="mt-10">
           <div>
             <p className="max-w-[46ch] text-lg leading-relaxed text-muted">
               Hiring an ML, applied AI or agent engineer for 2026 or 2027? Send me the role. Internships welcome too.
@@ -213,26 +305,8 @@ export function Contact() {
               </button>
             </div>
           </div>
-          <div className="flex gap-3">
-            {[
-              [profile.linkedin, LinkedinLogo, "LinkedIn"],
-              [profile.github, GithubLogo, "GitHub"],
-            ].map(([href, Icon, label]) => (
-              <Magnetic key={label} strength={0.35}>
-                <a href={href} target="_blank" rel="noreferrer" aria-label={label} className="grid h-14 w-14 place-items-center rounded-full border border-line bg-bg/50 backdrop-blur transition hover:border-accent hover:bg-surface-2">
-                  <Icon size={22} />
-                </a>
-              </Magnetic>
-            ))}
-          </div>
         </Reveal>
-        <footer className="mt-32 flex flex-col items-start justify-between gap-4 border-t border-line pt-8 text-sm text-muted sm:flex-row sm:items-center">
-          <div className="flex items-center gap-3">
-            <Monogram className="h-8 w-8 text-[13px]" />
-            <span>© {new Date().getFullYear()} {profile.name}</span>
-          </div>
-          <a href={profile.resume} download className="hover:text-fg">Résumé (PDF)</a>
-        </footer>
+        <Footer />
       </div>
     </section>
   );

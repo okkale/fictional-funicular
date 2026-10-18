@@ -7,7 +7,7 @@ import { glideTarget, glideTo, isGliding, sectionY } from "./glide";
   top of #hero glides back. The glide is interruptible: reversing mid-flight re-targets from the
   live scroll position, so the page never has to finish one move before starting the other.
   The glide itself lives in glide.js (wall-clock timed, lands exactly on the seam).
-  Listens to wheel / touch / key intent (never to `scroll`). Reduced motion jumps instantly.
+  Listens to wheel / touch / key intent (never to `scroll`). Motion off (?still) jumps instantly.
 */
 export function useSnapToHero({ reduce = false } = {}) {
   useEffect(() => {

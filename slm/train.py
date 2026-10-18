@@ -8,7 +8,10 @@ Run: python slm/corpus.py && python slm/train.py
 """
 import json
 import math
+<<<<<<< HEAD
 import os
+=======
+>>>>>>> origin/kale-voice-slm
 import random
 import struct
 import sys
@@ -19,8 +22,11 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+<<<<<<< HEAD
 torch.set_num_threads(8)
 
+=======
+>>>>>>> origin/kale-voice-slm
 sys.path.insert(0, str(Path(__file__).parent))
 from corpus import normalise  # noqa: E402
 
@@ -29,7 +35,11 @@ OUT = ROOT / "public" / "kale"
 BOS, SEP, ACT, EOS = "\x02", "\x03", "\x04", "\x00"
 
 CFG = dict(n_layer=4, n_head=4, d=128, block=352)
+<<<<<<< HEAD
 STEPS, BATCH, LR, DROPOUT = 750, 48, 3e-3, 0.1
+=======
+STEPS, BATCH, LR, DROPOUT = 1600, 48, 3e-3, 0.1
+>>>>>>> origin/kale-voice-slm
 torch.manual_seed(0)
 random.seed(0)
 
@@ -130,7 +140,11 @@ for step in range(STEPS + 1):
     loss.backward()
     torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
     opt.step()
+<<<<<<< HEAD
     if step % 100 == 0:
+=======
+    if step % 250 == 0:
+>>>>>>> origin/kale-voice-slm
         print(f"step {step:5d}  loss {loss.item():.4f}  {time.time() - t0:.0f}s", flush=True)
 
 
@@ -152,6 +166,7 @@ answers = {r["a"] for r in rows}
 held_out = {
     "could you share omkar's resume": "download",
     "what was the pneumonia paper about": "scroll:#projects",
+<<<<<<< HEAD
     "who wrote the pneumonia paper with him": "scroll:#projects",
     "how does the student risk model work": "scroll:#projects",
     "what are the critical weeks for student risk": "scroll:#projects",
@@ -164,6 +179,13 @@ held_out = {
     "how can i get in touch with him": "scroll:#contact",
     "where did omkar go to college": "scroll:#experience",
     "tell me about his nmiet internship": "scroll:#experience",
+=======
+    "how does the student risk model work": "scroll:#projects",
+    "what's trihub": "scroll:#lab",
+    "what is he really skilled at": "scroll:#expertise",
+    "how can i get in touch with him": "scroll:#contact",
+    "where did omkar go to college": "scroll:#experience",
+>>>>>>> origin/kale-voice-slm
     "what's the weather in pune": "",
     "who won the football world cup": "",
     "tell me about his speech project": "scroll:#projects",
@@ -172,9 +194,12 @@ held_out = {
     "what are his main skills": "scroll:#expertise",
     "is he open to internships": "scroll:#contact",
     "what stack is the erp built on": "scroll:#lab",
+<<<<<<< HEAD
     "who are you": "",
     "how do you work": "",
     "what are his key metrics": "scroll:#metrics",
+=======
+>>>>>>> origin/kale-voice-slm
     "write me a poem about rain": "",
 }
 ok = 0

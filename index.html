@@ -2,26 +2,64 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Omkar Kale · AI Engineer</title>
-    <meta name="description" content="Omkar Kale is a final-year AI engineering student who publishes explainable deep learning research and ships agent-powered ERP, CRM and web systems." />
-    <meta property="og:title" content="Omkar Kale · AI Engineer" />
+    <title>Omkar Kale · AI Engineer in Pune</title>
+    <meta name="description" content="Omkar Kale is an AI engineering student in Pune, India. He publishes explainable deep learning research and builds AI agents into ERP, CRM and web software. Projects, skills, résumé and contact." />
+    <meta name="author" content="Omkar Kale" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <!-- Search: the one address Google should index for this page. -->
+    <link rel="canonical" href="https://omkarkale.me/" />
+    <meta property="og:site_name" content="Omkar Kale" />
+    <meta property="og:title" content="Omkar Kale · AI Engineer in Pune" />
     <meta property="og:description" content="Models in research. Agents in production." />
-    <meta property="og:type" content="website" />
-    <!-- Card source: docs/og-card.html. Once deployed, make this an absolute URL (https://<domain>/og.png):
-         LinkedIn, Slack and X ignore relative image paths. -->
-    <meta property="og:image" content="/og.png" />
+    <meta property="og:type" content="profile" />
+    <meta property="profile:first_name" content="Omkar" />
+    <meta property="profile:last_name" content="Kale" />
+    <meta property="og:url" content="https://omkarkale.me/" />
+    <!-- Card source: docs/og-card.html. Absolute URL: LinkedIn, Slack and X ignore relative image paths. -->
+    <meta property="og:image" content="https://omkarkale.me/og.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="From model to product. Omkar Kale, AI engineering student." />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Omkar Kale · AI Engineer" />
+    <meta name="twitter:title" content="Omkar Kale · AI Engineer in Pune" />
     <meta name="twitter:description" content="Models in research. Agents in production." />
-    <meta name="twitter:image" content="/og.png" />
+    <meta name="twitter:image" content="https://omkarkale.me/og.png" />
     <meta name="theme-color" content="#030306" />
+    <!-- Structured data: tells search engines this page is Omkar Kale's profile, and that the
+         LinkedIn and GitHub accounts in sameAs are the same person (helps the name search show
+         this site and those profiles together). Facts only from data.js. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfilePage",
+        "url": "https://omkarkale.me/",
+        "name": "Omkar Kale · AI Engineer in Pune",
+        "mainEntity": {
+          "@type": "Person",
+          "@id": "https://omkarkale.me/#person",
+          "name": "Omkar Kale",
+          "givenName": "Omkar",
+          "familyName": "Kale",
+          "url": "https://omkarkale.me/",
+          "image": "https://omkarkale.me/me-portrait.jpg",
+          "jobTitle": "AI Engineer",
+          "description": "AI engineering student in Pune who publishes explainable deep learning research and builds AI agents into ERP, CRM and web software.",
+          "email": "mailto:kaleomkar1011@gmail.com",
+          "address": { "@type": "PostalAddress", "addressLocality": "Pune", "addressRegion": "Maharashtra", "addressCountry": "IN" },
+          "alumniOf": { "@type": "CollegeOrUniversity", "name": "Nutan College of Engineering & Research, Pune" },
+          "worksFor": [
+            { "@type": "Organization", "name": "Triverse Solutions" },
+            { "@type": "Organization", "name": "VOK Partners" }
+          ],
+          "knowsAbout": ["Artificial intelligence", "Deep learning", "Explainable AI", "Computer vision", "Agentic AI", "TensorFlow", "Python"],
+          "sameAs": ["https://www.linkedin.com/in/omkar-kale-391712298", "https://github.com/okkale"]
+        }
+      }
+    </script>
     <script>
-      // Always open at the top so the K.A.L.E. boot sequence plays.
+      // Always open at the top so the Kyle boot sequence plays.
       if ("scrollRestoration" in history) history.scrollRestoration = "manual";
       // Preview aid: ?motion forces full motion even when the OS asks for reduced motion.
       if (new URLSearchParams(location.search).has("motion")) {
@@ -34,7 +72,23 @@
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <!-- Served before the app loads, and what crawlers read first: React replaces it on start. -->
+    <div id="root">
+      <main style="min-height:100vh;display:grid;place-items:center;background:#030306;color:#f6f6f6;font-family:system-ui,sans-serif;padding:24px;text-align:center">
+        <div>
+          <h1 style="margin:0;font-size:40px;letter-spacing:-0.02em">Omkar Kale</h1>
+          <p style="margin:12px auto 0;max-width:46ch;color:#a6a9af;line-height:1.5">
+            AI engineering student in Pune, India. Explainable deep learning research (first-author paper on pneumonia detection) and AI agents inside ERP, CRM and web software, including the TriHub ERP.
+          </p>
+          <p style="margin:16px 0 0;font-size:14px">
+            <a href="https://www.linkedin.com/in/omkar-kale-391712298" rel="me" style="color:#ffb648">LinkedIn</a> ·
+            <a href="https://github.com/okkale" rel="me" style="color:#ffb648">GitHub</a> ·
+            <a href="mailto:kaleomkar1011@gmail.com" style="color:#ffb648">Email</a> ·
+            <a href="/Omkar_Kale_Resume.pdf" style="color:#ffb648">Résumé</a>
+          </p>
+        </div>
+      </main>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

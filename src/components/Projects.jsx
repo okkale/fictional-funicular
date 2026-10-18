@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotion } from "../perf";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import { projects } from "../data";
 import { PixelImage } from "./pixel";

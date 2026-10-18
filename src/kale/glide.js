@@ -1,8 +1,10 @@
-// One scroll animator for the whole site (landing snap, tours, K.A.L.E. answers, proof chips).
+import { still } from "../perf";
+
+// One scroll animator for the whole site (landing snap, tours, Kyle answers, proof chips).
 // Runs on the wall clock, not on frame deltas, so a slow frame skips ahead instead of stuttering,
 // and it always lands exactly on its target. One glide at a time: a new one replaces the old.
 
-const reduce = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const reduce = () => still;
 const EASES = {
   inOut: (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2), // jumps between places
   pan: (x) => -(Math.cos(Math.PI * x) - 1) / 2, // gentle sine: a slow camera pan through a section

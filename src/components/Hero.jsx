@@ -1,5 +1,6 @@
 import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useReducedMotion } from "../perf";
 import { ArrowDownRight, DownloadSimple } from "@phosphor-icons/react";
 import { EASE, Magnetic, Scramble } from "./ui";
 import { profile } from "../data";
@@ -13,8 +14,8 @@ const line = {
 
 /*
   Page 2. The portrait is the backdrop: Omkar on the right under the blue / red striped light,
-  the headline on the dark left side (the Sharkfold composition). Phones get a portrait crop with
-  the copy over a bottom fade. The photo settles in with a slow push-in and drifts on scroll.
+  the headline on the dark left side (the Sharkfold composition). Phones get a small, crisp round
+  avatar aligned with the copy, so the text never covers the face. The photo settles in with a slow push-in and drifts on scroll.
 */
 export default function Hero() {
   const ref = useRef(null);
@@ -23,33 +24,32 @@ export default function Hero() {
   const photoY = useTransform(scrollYProgress, [0, 1], [reduce ? 0 : -40, reduce ? 0 : 60]);
 
   return (
-    <section id="hero" ref={ref} className="hero relative min-h-[100dvh] overflow-hidden bg-bg px-4 md:px-8 lg:h-[100dvh]">
-      {/* Portrait: a tall photo on the right (full width on phones) whose dark edges melt into the page */}
+    <section id="hero" ref={ref} className="hero relative overflow-hidden bg-bg px-4 pt-16 md:min-h-[100dvh] md:px-8 md:pt-0 lg:h-[100dvh]">
+      {/* Portrait: a tall photo on the right whose dark edges melt into the page. Phones: a round
+          avatar in the flow, above the copy. */}
       <motion.div
         style={{ y: photoY }}
-        className="absolute inset-x-0 top-14 h-[64dvh] will-change-transform md:bottom-[6dvh] md:left-auto md:right-[calc(max(1rem,(100vw-1400px)/2)+6vw)] md:top-[10dvh] md:h-auto md:w-[min(50%,calc(84dvh*1077/1460))]"
+        className="hero-photo relative mt-6 h-28 w-28 overflow-hidden rounded-full bg-surface ring-1 ring-white/15 shadow-[0_10px_40px_-12px_rgba(2,82,172,0.6)] will-change-transform md:absolute md:mt-0 md:overflow-visible md:rounded-none md:bg-transparent md:shadow-none md:ring-0 md:bottom-[6dvh] md:right-[calc(max(1rem,(100vw-1400px)/2)+6vw)] md:top-[10dvh] md:mx-0 md:aspect-auto md:h-auto md:w-[min(50%,calc(84dvh*1077/1460))]"
         aria-hidden
       >
         <motion.img
           src="/me-portrait.jpg"
           srcSet="/me-portrait.webp"
-          alt=""
-          className="hero-portrait h-full w-full origin-top object-cover object-[50%_8%] md:object-top"
+          alt="Omkar Kale"
+          className="hero-portrait -ml-[15%] -mt-[9%] h-auto w-[130%] max-w-none origin-top md:m-0 md:h-full md:w-full md:max-w-full md:object-cover md:object-top"
           initial={reduce ? false : { opacity: 0, scale: 1.06 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.15 }} /* the phone crop only ever shows ~25% of the photo */
           transition={{ duration: 1.8, ease: EASE }}
         />
-        {/* Phones: the photo ends in a soft fade above the copy */}
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-bg via-bg/70 to-transparent md:hidden" />
       </motion.div>
 
       {/* Fades: into the page at the top and bottom, and a dark field behind the text */}
-      <div className="pointer-events-none absolute inset-x-0 top-14 h-12 bg-gradient-to-b from-bg to-transparent md:top-[7dvh]" aria-hidden />
+      <div className="pointer-events-none absolute inset-x-0 top-14 hidden h-12 bg-gradient-to-b from-bg to-transparent md:top-[7dvh] md:block" aria-hidden />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-40 bg-gradient-to-t from-bg via-bg/40 to-transparent md:block" aria-hidden />
       <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-[62%] bg-gradient-to-r from-bg/90 via-bg/50 to-transparent md:block" aria-hidden />
 
-      <div className="relative z-[3] mx-auto flex min-h-[100dvh] max-w-[1400px] flex-col justify-end pb-14 pt-28 md:justify-center lg:h-full lg:min-h-0 lg:pb-[6dvh] lg:pt-[12dvh]">
+      <div className="relative z-[3] mx-auto mt-5 flex max-w-[1400px] flex-col pb-14 md:mt-0 md:min-h-[100dvh] md:justify-center md:pt-28 lg:h-full lg:min-h-0 lg:pb-[6dvh] lg:pt-[12dvh]">
         <div className="max-w-[640px]">
           <motion.p
             initial={reduce ? false : { opacity: 0 }}

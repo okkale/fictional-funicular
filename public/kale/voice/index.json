@@ -54,6 +54,7 @@
 "Sure. The tour buttons are right at the top, on the landing screen. Taking you there.": "2fb1d370177d.mp3",
 "Anytime! Anything else you want to know about Omkar?": "dfb7d7a2c89a.mp3",
 "Bye! Hope to see you in Omkar's inbox soon.": "67d912916857.mp3",
+<<<<<<< HEAD
 "Hmm, that one I can't help with, I only know about Omkar's work. Try asking about his research, projects, the ERP, his skills, or how to hire him.": "d746778a0eec.mp3",
 "Because he does both sides. Published research in explainable deep learning, and production engineering in NestJS and React. He knows what a model is doing, and he knows how to deploy it inside real software.": "572651d4fe4f.mp3",
 "He organised a national-level hackathon, served as Joint Cultural Secretary at NMIET, and ran clubs and tech initiatives across campus.": "7f7fb3a0ddf2.mp3",
@@ -63,4 +64,7 @@
 "The academic risk model trained on OULAD data across 32,000+ students. The attention weights showed weeks 6 to 8 are the critical window to flag at-risk students.": "c0b71acc3d3b.mp3",
 "The highlights: one published paper as first author, four AI projects, 94.6% accuracy on academic risk, 3000+ student records in CRM, and a live ERP.": "a49d85dc9943.mp3",
 "The pneumonia paper was authored by Omkar Kale as first author, alongside S. Salunke, S. Shinde, P. Thomake, P. Patil and R. Patil.": "0674d78e2f16.mp3"
+=======
+"Hmm, that one I can't help with, I only know about Omkar's work. Try asking about his research, projects, the ERP, his skills, or how to hire him.": "d746778a0eec.mp3"
+>>>>>>> origin/kale-voice-slm
 }

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { animate, motion, useInView, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { animate, motion, useInView, useMotionValue, useSpring } from "motion/react";
+import { useReducedMotion } from "../perf";
 
 export const EASE = [0.16, 1, 0.3, 1];
 
@@ -135,7 +136,7 @@ export function useSpotlight() {
   };
 }
 
-// Section label: K.A.L.E.'s gold, as a HUD tick and a mono caption. Every section opens with one,
+// Section label: Kyle's gold, as a HUD tick and a mono caption. Every section opens with one,
 // so the guide's colour runs through the whole page, not just the landing.
 export function Eyebrow({ children, className = "" }) {
   return (

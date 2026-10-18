@@ -1,7 +1,8 @@
-// Shared K.A.L.E. state: chat log, voice, tour. One store so the landing greeter and the
+// Shared Kyle state: chat log, voice, tour. One store so the landing greeter and the
 // corner dock speak with the same voice and the same memory.
 import { useSyncExternalStore } from "react";
 import { profile } from "../data";
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 import { answer, TOURS } from "./intents";
 import { speak, stopSpeaking, supported } from "./voice";
@@ -10,6 +11,11 @@ import { answer, matchIntent, TOURS } from "./intents";
 import { speak, stopSpeaking, supported, getVoiceGender, setVoiceGender as applyVoiceGender } from "./voice";
 import { loadModel, pickAnswer, vet } from "./slm";
 >>>>>>> Stashed changes
+=======
+import { answer, matchIntent, TOURS } from "./intents";
+import { speak, stopSpeaking, supported } from "./voice";
+import { loadModel, pickAnswer, vet } from "./slm";
+>>>>>>> origin/kale-voice-slm
 import { glideTo, isGliding, sectionY, stopGlide } from "./glide";
 import { recordInteraction, findLearnedAnswer, alterAnswer, getMemoryStats, clearMemory, toggleLearning } from "./memory";
 
@@ -21,6 +27,8 @@ let state = {
   open: false,
   tour: null, // { id, index, playing } while a guided tour runs
   log: [],
+  slm: "idle", // the small language model: idle | loading | ready | off
+  thinking: false,
 };
 const subs = new Set();
 const set = (patch) => {
@@ -57,17 +65,47 @@ export function say(text, meta = null) {
   return speak(text, { onStart: () => set({ speaking: true }), onEnd: () => set({ speaking: false }) }, state.voiceGender);
 }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 export function ask(raw) {
   const a = answer(raw);
   if (!a) return;
   set({ log: [...state.log, { who: "you", text: raw.trim() }] });
 =======
+=======
+>>>>>>> origin/kale-voice-slm
 // Start fetching the model's weights (about 1.7 MB) before the first question needs them.
 export function warmModel() {
   if (state.slm !== "idle") return loadModel();
   set({ slm: "loading" });
   return loadModel().then((m) => (set({ slm: m ? "ready" : "off" }), m));
+<<<<<<< HEAD
+=======
+}
+
+// The model answers when it is confident and its answer passes `vet`; otherwise, or while the
+// weights are still downloading, the keyword rules answer.
+async function modelAnswer(q) {
+  const model = await Promise.race([warmModel(), wait(1500).then(() => null)]);
+  if (!model) return null;
+  return vet(await model.generate(q));
+}
+
+export async function ask(raw) {
+  const q = raw.trim();
+  if (!q) return;
+  set({ log: [...state.log, { who: "you", text: q }], thinking: true });
+  let model = null;
+  try {
+    model = await modelAnswer(q);
+  } catch {
+    model = null;
+  }
+  const a = pickAnswer(model, matchIntent(q)) ?? answer(q);
+  set({ thinking: false });
+  runAction(a.action);
+  say(a.text);
+>>>>>>> origin/kale-voice-slm
 }
 
 // The model answers when it is confident and its answer passes `vet`; otherwise, or while the
@@ -164,16 +202,20 @@ async function goStep(index) {
   await landed();
   if (token !== tourToken) return;
   const spoken = say(step.line);
-  // Sections taller than the visible area get a slow pan to their end while K.A.L.E. talks,
+  // With voice on, the stop lasts as long as Kyle talks; muted, as long as the line takes to read.
+  const read = Math.min(14000, Math.max(3500, step.line.length * 55));
+  // Sections taller than the visible area get a slow pan to their end while Kyle talks,
   // so every part of the section passes through view before the next stop.
   const pan = panFor(step.target, step.through);
-  const hold = Math.max(6500, step.line.length * 65, pan ? pan.distance * 7 + 2800 : 0);
+  const panMs = pan ? Math.max(2600, Math.min(read, pan.distance * 5 + 1200)) : 0;
   if (pan) {
-    await wait(1400); // let the headline register first
+    await wait(900); // let the headline register first
     if (token !== tourToken) return;
-    glideTo(pan.to, { ms: hold - 2400, ease: "pan" });
+    glideTo(pan.to, { ms: panMs, ease: "pan" });
   }
-  await Promise.all([spoken, wait(pan ? hold - 1400 : hold)]);
+  await Promise.all([state.voiceOn ? spoken : null, wait(state.voiceOn ? 1500 : read), wait(panMs)]);
+  if (token !== tourToken || !state.tour?.playing) return;
+  await wait(700); // a beat between stops, not a pause
   if (token !== tourToken || !state.tour?.playing) return;
   goStep(index + 1);
 }

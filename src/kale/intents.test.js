@@ -3,9 +3,9 @@ import { answer, SECTIONS, TOURS } from "./intents";
 
 const PNEUMONIA_NUMBERS = /93%|0\.96|21,?293/;
 
-describe("K.A.L.E. intents", () => {
+describe("Kyle intents", () => {
   it("introduces itself on a greeting", () => {
-    expect(answer("hello").text).toContain("K.A.L.E.");
+    expect(answer("hello").text).toContain("Kyle");
   });
 
   it("routes pneumonia questions to projects, as a published paper, without quoting results", () => {

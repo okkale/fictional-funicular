@@ -1,4 +1,5 @@
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
+import { useReducedMotion } from "../perf";
 import { CaretLeft, CaretRight, Pause, Play, X } from "@phosphor-icons/react";
 import Orb from "./Orb";
 import Typed from "./Typed";
@@ -10,7 +11,7 @@ const NAMES = { recruiter: "Recruiter tour", engineer: "Engineer tour", explore:
 
 /*
   Guided tour caption: one slim glass bar at the bottom of the screen. Title of the current stop,
-  K.A.L.E.'s line as a caption, and playback controls. Rises from the bottom and leaves the same way.
+  Kyle's line as a caption, and playback controls. Rises from the bottom and leaves the same way.
 */
 export default function TourBar() {
   const { tour, speaking } = useKale();
@@ -30,7 +31,7 @@ export default function TourBar() {
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       exit={reduce ? { opacity: 0 } : { opacity: 0, y: 40, filter: "blur(10px)" }}
       transition={{ type: "spring", bounce: 0, duration: 0.5 }}
-      className="fixed inset-x-3 bottom-3 z-50 mx-auto max-w-[620px] overflow-hidden rounded-[18px] border border-white/10 bg-chrome/85 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_24px_80px_-24px_rgba(0,0,0,0.8)] backdrop-blur-xl md:bottom-4"
+      className="fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom,0px))] z-50 mx-auto max-w-[620px] overflow-hidden rounded-[18px] border border-white/10 bg-chrome/85 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_24px_80px_-24px_rgba(0,0,0,0.8)] backdrop-blur-xl md:bottom-[calc(1rem+env(safe-area-inset-bottom,0px))]"
     >
       {/* Progress: a single growing hairline */}
       <motion.div
