@@ -132,8 +132,9 @@ export function PixelImage({ src, alt, className = "", steps = [6, 10, 16, 28, 4
   }, [img, inView, src]);
 
   return (
-    <div ref={wrap} className={className}>
+    <div ref={wrap} className={`relative ${className}`}>
       <canvas ref={ref} role="img" aria-label={alt} className="block h-full w-full object-cover" />
+      <img src={src} alt={alt} className="sr-only" loading="lazy" decoding="async" />
     </div>
   );
 }

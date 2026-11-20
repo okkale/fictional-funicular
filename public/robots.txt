@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /kale/voice/
 
+# Host and Sitemap
+Host: https://omkarkale.me
 Sitemap: https://omkarkale.me/sitemap.xml

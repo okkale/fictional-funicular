@@ -30,12 +30,14 @@ export default function Hero() {
       <motion.div
         style={{ y: photoY }}
         className="hero-photo relative mt-6 h-28 w-28 overflow-hidden rounded-full bg-surface ring-1 ring-white/15 shadow-[0_10px_40px_-12px_rgba(2,82,172,0.6)] will-change-transform md:absolute md:mt-0 md:overflow-visible md:rounded-none md:bg-transparent md:shadow-none md:ring-0 md:bottom-[6dvh] md:right-[calc(max(1rem,(100vw-1400px)/2)+6vw)] md:top-[10dvh] md:mx-0 md:aspect-auto md:h-auto md:w-[min(50%,calc(84dvh*1077/1460))]"
-        aria-hidden
       >
         <motion.img
           src="/me-portrait.jpg"
-          srcSet="/me-portrait.webp"
-          alt="Omkar Kale"
+          srcSet="/me-portrait.webp 1x"
+          alt="Omkar Kale · AI Engineer &amp; Deep Learning Researcher in Pune"
+          width={1077}
+          height={1460}
+          fetchPriority="high"
           className="hero-portrait -ml-[15%] -mt-[9%] h-auto w-[130%] max-w-none origin-top md:m-0 md:h-full md:w-full md:max-w-full md:object-cover md:object-top"
           initial={reduce ? false : { opacity: 0, scale: 1.06 }}
           whileInView={{ opacity: 1, scale: 1 }}

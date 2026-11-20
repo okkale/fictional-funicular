@@ -1,10 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://omkarkale.me/</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
     <image:image>
       <image:loc>https://omkarkale.me/me-portrait.jpg</image:loc>
+      <image:title>Omkar Kale - AI Engineer &amp; Deep Learning Researcher</image:title>
+      <image:caption>Omkar Kale portrait, AI engineer based in Pune, India</image:caption>
     </image:image>
+    <image:image>
+      <image:loc>https://omkarkale.me/og.png</image:loc>
+      <image:title>Omkar Kale Portfolio - Models to Product</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://omkarkale.me/research/gradcam.jpg</image:loc>
+      <image:title>Grad-CAM Pneumonia Detection XAI Heatmap</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://omkarkale.me/research/lime.jpg</image:loc>
+      <image:title>LIME Superpixel Explainable AI Chest X-ray</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://omkarkale.me/research/shap.jpg</image:loc>
+      <image:title>SHAP Region Attribution Chest X-ray Analysis</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://omkarkale.me/Omkar_Kale_Resume.pdf</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

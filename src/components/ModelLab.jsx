@@ -43,6 +43,8 @@ function Screens() {
               key={shot.id}
               src={shot.src}
               alt={`TriHub ERP, ${shot.caption}`}
+              width={1600}
+              height={1046}
               loading="lazy"
               decoding="async"
               initial={{ opacity: 0, scale: 1.01 }}
@@ -104,7 +106,7 @@ function ScreenCarousel() {
         >
           {erpScreens.map((x) => (
             <div key={x.id} className="relative aspect-[1600/1046] w-full shrink-0 snap-center bg-white">
-              <img src={x.src} alt={`TriHub ERP, ${x.caption}`} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-top" />
+              <img src={x.src} alt={`TriHub ERP, ${x.caption}`} width={1600} height={1046} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-top" />
             </div>
           ))}
         </div>
